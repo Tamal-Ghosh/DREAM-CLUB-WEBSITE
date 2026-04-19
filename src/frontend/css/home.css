@@ -1,8 +1,9 @@
+/* Reset and base style */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: cursive;
 }
 
 body {
@@ -13,9 +14,11 @@ body {
 .navbar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 15px 50px;
-  background: #b30000;
+  background: #520101;
   color: white;
+  border-bottom: rgb(174, 73, 73) 2px solid;
 }
 
 .navbar img {
@@ -38,7 +41,7 @@ body {
   text-decoration: none;
 }
 
-/* Hero */
+/* Hero section */
 .hero {
   text-align: center;
   padding: 100px 20px;
@@ -54,6 +57,7 @@ body {
   margin: 10px 0;
 }
 
+/* Hero buttons */
 .buttons {
   margin-top: 20px;
 }
@@ -92,7 +96,7 @@ body {
   padding: 20px;
   width: 250px;
   text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* CTA */

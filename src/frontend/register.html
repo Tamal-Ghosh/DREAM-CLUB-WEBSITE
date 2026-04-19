@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic page setup -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+  <!-- Main register page container -->
+  <main class="register-shell">
+    <!-- Left side: branding and short intro -->
+    <section class="visual" aria-label="Community message">
+      <img class="brand-logo" src="../assets/logo.jpg" alt="Dream logo">
+      <h1>Join the Lifesaver Network</h1>
+      <p>Create your account to become a donor, request help faster, and stay connected with your local support community.</p>
+      <!-- Quick benefits list -->
+      <ul class="feature-list" aria-label="Benefits">
+        <li>Track your donation activity</li>
+        <li>Receive urgent request alerts</li>
+        <li>Connect with verified volunteers</li>
+      </ul>
+    </section>
+
+    <!-- Right side: registration form -->
+    <section class="form-wrap" aria-label="Register form section">
+      <form class="form-inner" action="#" method="post" autocomplete="on">
+        <h2>Create Account</h2>
+        <p class="subtitle">Fill in your details to get started.</p>
+
+        <!-- Name fields -->
+        <div class="field-grid">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" placeholder="John" required>
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" placeholder="Doe" required>
+          </div>
+        </div>
+
+        <!-- Email input -->
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <!-- Blood group and phone -->
+        <div class="field-grid">
+          <div class="field">
+            <label for="bloodGroup">Blood Group</label>
+            <select id="bloodGroup" name="bloodGroup" required>
+              <option value="" selected disabled>Select group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" placeholder="0123456789" required>
+          </div>
+        </div>
+
+        <!-- Password setup -->
+        <div class="field-grid">
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Minimum 6 characters" required minlength="6">
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Repeat password" required minlength="6">
+          </div>
+        </div>
+
+        <!-- Terms agreement -->
+        <label class="check" for="terms">
+          <input id="terms" name="terms" type="checkbox" required>
+          <span>I agree to the Terms and Privacy Policy</span>
+        </label>
+
+        <!-- Submit and sign-in link -->
+        <button class="btn" type="submit">Create Account</button>
+
+        <p class="hint">Already have an account? <a class="link" href="login.html">Sign in</a></p>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
