@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard | Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
+        <div>
+          <h1>Patient Dashboard</h1>
+          <p>Request blood quickly, track progress, and wait with clear updates.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <a class="chip profile-chip" href="#overview">Profile</a>
+        <a class="chip" href="login.html">Sign out</a>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Dashboard sections">
+      <a class="active" href="#overview">Overview</a>
+      <a href="#create-request">Create Request</a>
+      <a href="#my-requests">My Requests</a>
+      <a href="#assigned-donor">Assigned Donor</a>
+      <a href="#notifications">Notifications</a>
+    </nav>
+
+    <section class="dashboard-content" id="overview">
+      <!-- Patient summary at the top -->
+
+          <h2>Make a request and follow every update in one place.</h2>
+          <p>
+            Use the form below to send a blood request, then track the request status until a donor is found and blood is delivered.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#create-request">Create request</a>
+            <a class="btn secondary" href="#my-requests">Track requests</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="patient-status-strip">
+        <div class="patient-status">
+          <span>Open requests</span>
+          <strong>03</strong>
+        </div>
+        <div class="patient-status">
+          <span>Donor found</span>
+          <strong>01</strong>
+        </div>
+        <div class="patient-status">
+          <span>Completed</span>
+          <strong>02</strong>
+        </div>
+      </div>
+
+      <div class="patient-grid">
+        <section class="patient-card" id="create-request">
+          <div class="panel-header">
+            <div>
+              <h3>Create Blood Request</h3>
+              <p>Fill in the request details and submit it quickly.</p>
+            </div>
+          </div>
+
+          <form class="request-form-grid" action="#" method="post">
+            <div class="field">
+              <label for="bloodGroup">Blood group needed</label>
+              <select id="bloodGroup" name="bloodGroup" required>
+                <option value="" selected disabled>Select group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="units">Units required</label>
+              <input id="units" name="units" type="number" min="1" placeholder="e.g. 2" required>
+            </div>
+
+            <div class="field full">
+              <label for="hospital">Hospital name</label>
+              <input id="hospital" name="hospital" type="text" placeholder="Enter hospital name" required>
+            </div>
+
+            <div class="field full">
+              <label for="location">Location</label>
+              <input id="location" name="location" type="text" placeholder="District, thana, area" required>
+            </div>
+
+            <div class="field full">
+              <label for="urgency">Urgency</label>
+              <select id="urgency" name="urgency" required>
+                <option value="" selected disabled>Select urgency</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <button class="btn" type="submit">Submit Request</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="patient-card" id="my-requests">
+          <div class="panel-header">
+            <div>
+              <h3>My Requests</h3>
+              <p>Track the request from pending to completed.</p>
+            </div>
+          </div>
+
+          <div class="request-card-list">
+            <article class="request-record">
+              <div class="request-record-top">
+                <span class="request-record-id">Request ID: PR-2041</span>
+                <span class="table-badge pending">Pending</span>
+              </div>
+              <div class="record-meta">
+                <strong>A+</strong>
+                <span>Created: 27 Apr 2026</span>
+                <span>Hospital: City Hospital ICU</span>
+              </div>
+            </article>
+
+            <article class="request-record">
+              <div class="request-record-top">
+                <span class="request-record-id">Request ID: PR-2034</span>
+                <span class="table-badge pending">Assigned</span>
+              </div>
+              <div class="record-meta">
+                <strong>O+</strong>
+                <span>Created: 25 Apr 2026</span>
+                <span>Hospital: National Medical College</span>
+              </div>
+            </article>
+
+            <article class="request-record">
+              <div class="request-record-top">
+                <span class="request-record-id">Request ID: PR-2018</span>
+                <span class="table-badge success">Completed</span>
+              </div>
+              <div class="record-meta">
+                <strong>B+</strong>
+                <span>Created: 21 Apr 2026</span>
+                <span>Hospital: Community Blood Center</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <div class="patient-grid">
+        <section class="patient-card" id="assigned-donor">
+          <div class="panel-header">
+            <div>
+              <h3>Assigned Donor Info</h3>
+              <p>Starts with no donor, then shows donor details after acceptance.</p>
+            </div>
+          </div>
+
+          <div class="assigned-donor">
+            <div class="assigned-card">
+              <strong>No donor assigned yet</strong>
+              <span>Wait here until a donor accepts your request.</span>
+            </div>
+            <div class="assigned-card">
+              <strong>Donor info after acceptance</strong>
+              <span>Donor name, contact number, and donation status will appear here.</span>
+            </div>
+            <div class="assigned-card">
+              <strong>Completed</strong>
+              <span>After the donor info section, the request can move to completed.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="patient-card" id="notifications">
+          <div class="panel-header">
+            <div>
+              <h3>Notifications</h3>
+              <p>Simple updates while you wait.</p>
+            </div>
+          </div>
+
+          <div class="notification-stack">
+            <div class="notification-pill">
+              <strong>Donor found</strong>
+              <span>A matching donor has been assigned to your request.</span>
+            </div>
+            <div class="notification-pill">
+              <strong>Request accepted</strong>
+              <span>The request was accepted by the support team.</span>
+            </div>
+            <div class="notification-pill">
+              <strong>Blood delivered</strong>
+              <span>The blood delivery update will appear here after completion.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
