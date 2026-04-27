@@ -21,10 +21,22 @@ body {
   border-bottom: rgb(174, 73, 73) 2px solid;
 }
 
-.navbar img {
+.brand-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logos img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.brand-logos img:last-child {
+  object-fit: contain;
 }
 
 .navbar ul {
@@ -108,9 +120,33 @@ body {
 }
 
 /* Footer */
-footer {
+.site-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 20px;
   background: #222;
   color: white;
+}
+
+.footer-logo {
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.footer-logo.left {
+  left: 20px;
+}
+
+.footer-logo.right {
+  right: 20px;
+  object-fit: contain;
 }

@@ -15,7 +15,10 @@
   <main class="register-shell">
     <!-- Left side: branding and short intro -->
     <section class="visual" aria-label="Community message">
-      <img class="brand-logo" src="../assets/logo.jpg" alt="Dream logo">
+      <div class="logo-row" aria-label="Club and KUET logos">
+        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
+        <img class="kuet-logo" src="../assets/logoKuet.png" alt="KUET logo">
+      </div>
       <h1>Join the Lifesaver Network</h1>
       <p>Create your account to become a donor, request help faster, and stay connected with your local support community.</p>
       <!-- Quick benefits list -->
@@ -69,6 +72,22 @@
           <div class="field">
             <label for="phone">Phone Number</label>
             <input id="phone" name="phone" type="tel" placeholder="0123456789" required>
+          </div>
+        </div>
+
+        <!-- Current address input -->
+        <div class="field-grid address-grid">
+          <div class="field">
+            <label for="district">District</label>
+            <input id="district" name="district" type="text" placeholder="Type district name" required>
+          </div>
+          <div class="field">
+            <label for="thana">Thana</label>
+            <input id="thana" name="thana" type="text" placeholder="Type thana name" required>
+          </div>
+          <div class="field village-field">
+            <label for="village">Village / Area</label>
+            <input id="village" name="village" type="text" placeholder="Village, area, or locality" required>
           </div>
         </div>
 

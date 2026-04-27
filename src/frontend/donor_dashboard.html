@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donor Dashboard | Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <!-- Top bar with logo and quick availability control -->
+
+    
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.jpg" alt="Dream logo">
+        <div>
+          <h1>Donor Dashboard</h1>
+          <p>See urgent blood needs, manage availability, and track your impact.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <label class="availability-switch">
+          <input type="checkbox" checked>
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span class="switch-text">Available</span>
+        </label>
+        <a class="chip profile-chip" href="#settings">Profile</a>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Dashboard sections">
+      <a class="active" href="#overview">Overview</a>
+      <a href="#requests">Requests</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#history">History</a>
+      <a href="#notifications">Notifications</a>
+    </nav>
+
+    <section class="dashboard-content" id="overview">
+      <!-- First thing the donor sees -->
+
+
+
+      <div class="hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">Hero status</div>
+          <div class="status-line">
+            <div>
+              <span class="status-label">Blood group</span>
+              <strong class="blood-group">A+</strong>
+            </div>
+            <div>
+              <span class="status-label">Availability</span>
+              <strong class="availability-badge available">Available</strong>
+            </div>
+            <div>
+              <span class="status-label">Last donation</span>
+              <strong>12 Apr 2026</strong>
+            </div>
+          </div>
+          <h2>Your blood can help save lives today.</h2>
+          <p>
+            Stay updated with nearby urgent requests, upcoming donation dates, and your completed donation record.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#requests">Donate now</a>
+            <a class="btn secondary" href="#history">View history</a>
+          </div>
+        </article>
+
+        <aside class="side-card">
+          <h3>Donor actions</h3>
+          <p>Fast access to your most important tasks.</p>
+          <ul>
+            <li>Update availability before responding to requests</li>
+            <li>Check your local area for nearby urgent needs</li>
+            <li>Keep contact and location details current</li>
+          </ul>
+        </aside>
+      </div>
+
+      <!-- Simple numbers that show donor history -->
+
+
+
+
+      <div class="stats-grid">
+        <article class="stat">
+          <div class="label">Donations completed</div>
+          <div class="value">18</div>
+          <div class="delta">Total donations made</div>
+        </article>
+        <article class="stat">
+          <div class="label">Lives possibly saved</div>
+          <div class="value">54</div>
+          <div class="delta">Estimated impact</div>
+        </article>
+        <article class="stat">
+          <div class="label">Active donor days</div>
+          <div class="value">142</div>
+          <div class="delta">Days since registration</div>
+        </article>
+        <article class="stat">
+          <div class="label">Urgent alerts</div>
+          <div class="value">06</div>
+          <div class="delta">Near your area</div>
+        </article>
+      </div>
+
+      <div class="panels-grid">
+        <!-- Urgent requests get the main focus -->
+
+
+
+
+
+        <section class="panel" id="requests">
+          <div class="panel-header">
+            <div>
+              <h3>Urgent blood requests</h3>
+              <p>High priority requests that match your blood group or are close to you.</p>
+            </div>
+            <a class="chip" href="#">See all</a>
+          </div>
+
+          <div class="request-grid">
+            <article class="request-card high">
+              <div class="request-top">
+                <strong>A+ Needed</strong>
+                <span class="urgency high">High</span>
+              </div>
+              <h4>City Hospital ICU</h4>
+              <p>Mirpur, Dhaka · 2 units needed · posted 30 min ago</p>
+              <div class="request-actions">
+                <a class="btn" href="#">Donate Now</a>
+                <a class="btn secondary" href="#">View Details</a>
+              </div>
+            </article>
+
+            <article class="request-card medium">
+              <div class="request-top">
+                <strong>O+ Needed</strong>
+                <span class="urgency medium">Medium</span>
+              </div>
+              <h4>National Medical College</h4>
+              <p>Uttara, Dhaka · 1 unit needed · posted 1 hour ago</p>
+              <div class="request-actions">
+                <a class="btn" href="#">Donate Now</a>
+                <a class="btn secondary" href="#">View Details</a>
+              </div>
+            </article>
+
+            <article class="request-card low">
+              <div class="request-top">
+                <strong>B+ Needed</strong>
+                <span class="urgency low">Low</span>
+              </div>
+              <h4>Community Blood Center</h4>
+              <p>Gazipur Sadar · 3 units needed · posted 3 hours ago</p>
+              <div class="request-actions">
+                <a class="btn" href="#">Donate Now</a>
+                <a class="btn secondary" href="#">View Details</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+
+
+
+        <!-- Nearby requests and donation history stay together for quick review -->
+
+
+
+
+
+        <section class="table-card" id="schedule">
+          <div class="panel-header">
+            <div>
+              <h3>Nearby requests</h3>
+              <p>Location-based requests and future map integration.</p>
+            </div>
+          </div>
+
+          <div class="nearby-list">
+            <div class="nearby-item">
+              <span>Within 3 km</span>
+              <strong>2 urgent requests</strong>
+            </div>
+            <div class="nearby-item">
+              <span>Within 5 km</span>
+              <strong>4 matching requests</strong>
+            </div>
+            <div class="nearby-item">
+              <span>Map view</span>
+              <strong>Coming later</strong>
+            </div>
+          </div>
+
+          <div class="panel-header" id="history">
+            <div>
+              <h3>Donation history</h3>
+              <p>Recent donations and request outcomes.</p>
+            </div>
+          </div>
+
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Patient / Hospital</th>
+                  <th>Blood Group</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>12 Apr 2026</td>
+                  <td>City Hospital ICU</td>
+                  <td>A+</td>
+                  <td><span class="table-badge success">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>22 Mar 2026</td>
+                  <td>National Medical College</td>
+                  <td>O+</td>
+                  <td><span class="table-badge pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>03 Feb 2026</td>
+                  <td>Community Blood Center</td>
+                  <td>B+</td>
+                  <td><span class="table-badge success">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- Alerts and messages for the donor -->
+
+
+
+      
+      <div class="bottom-grid">
+        <section class="panel notifications-panel" id="notifications">
+          <div class="panel-header">
+            <div>
+              <h3>Notifications</h3>
+              <p>Emergency alerts and system updates.</p>
+            </div>
+          </div>
+
+          <div class="notification-list">
+            <article class="notification-item urgent">
+              <strong>Emergency request alert</strong>
+              <span>High priority blood need nearby. Respond now.</span>
+            </article>
+            <article class="notification-item success">
+              <strong>Your donation request accepted</strong>
+              <span>Central Blood Bank confirmed your last donation.</span>
+            </article>
+            <article class="notification-item info">
+              <strong>System message</strong>
+              <span>Your profile was updated successfully yesterday.</span>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

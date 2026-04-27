@@ -55,7 +55,13 @@ body {
   position: relative;
 }
 
-/* Brand logo */
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
 .brand-logo {
   width: 66px;
   height: 66px;
@@ -63,7 +69,16 @@ body {
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.7);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  margin-bottom: 18px;
+}
+
+.kuet-logo {
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 /* Intro text */
@@ -143,6 +158,14 @@ body {
   gap: 14px;
 }
 
+.address-grid {
+  margin-bottom: 2px;
+}
+
+.address-grid .village-field {
+  grid-column: 1 / -1;
+}
+
 .field {
   margin-bottom: 14px;
 }
@@ -155,7 +178,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   border: 1px solid #e6b3aa;
   border-radius: 12px;
@@ -167,10 +191,23 @@ select {
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px var(--ring);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.address-note {
+  margin: -4px 0 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 /* Terms checkbox row */
