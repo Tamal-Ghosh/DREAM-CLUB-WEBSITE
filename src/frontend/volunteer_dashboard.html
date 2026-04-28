@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Dashboard | Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
+        <div>
+          <h1>Volunteer Dashboard</h1>
+          <p>Match donors to requests and manage emergency response quickly.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <a class="chip profile-chip" href="#overview">Profile</a>
+        <a class="chip" href="login.html">Sign out</a>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Dashboard sections">
+      <a class="active" href="#overview">Overview</a>
+      <a href="#queue">Queue</a>
+      <a href="#matching">Matching</a>
+      <a href="#status">Status</a>
+      <a href="#notifications">Notifications</a>
+    </nav>
+
+    <section class="dashboard-content" id="overview">
+      <div class="hero-grid volunteer-hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">Match + Assign + Manage</div>
+          <h2>Keep blood requests moving fast.</h2>
+          <p>
+            Volunteers can review pending requests, match donors by blood group and location,
+            and update request status without delays.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#queue">Open queue</a>
+            <a class="btn secondary" href="#matching">Match donors</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat">
+          <div class="label">Active requests</div>
+          <div class="value">24</div>
+          <div class="delta">Waiting for donors</div>
+        </article>
+        <article class="stat">
+          <div class="label">Assigned today</div>
+          <div class="value">11</div>
+          <div class="delta">Matches completed</div>
+        </article>
+        <article class="stat">
+          <div class="label">Emergency cases</div>
+          <div class="value">05</div>
+          <div class="delta">Red card priority</div>
+        </article>
+      </div>
+
+      <div class="admin-grid">
+        <section class="panel" id="queue">
+          <div class="panel-header">
+            <div>
+              <h3>Active Blood Requests Queue</h3>
+              <p>Pending requests ready for donor assignment.</p>
+            </div>
+          </div>
+
+          <div class="queue-list">
+            <article class="queue-card">
+              <div class="queue-top">
+                <div class="queue-meta">
+                  <strong>A+ · City Hospital</strong>
+                  <span>Mirpur, Dhaka · 10 min ago</span>
+                </div>
+                <span class="tag high">High</span>
+              </div>
+              <div class="assign-actions">
+                <a class="btn" href="#matching">Assign donor</a>
+                <a class="btn secondary" href="#status">Mark as handled</a>
+              </div>
+            </article>
+
+            <article class="queue-card">
+              <div class="queue-top">
+                <div class="queue-meta">
+                  <strong>O+ · National Medical College</strong>
+                  <span>Uttara, Dhaka · 25 min ago</span>
+                </div>
+                <span class="tag medium">Medium</span>
+              </div>
+              <div class="assign-actions">
+                <a class="btn" href="#matching">Assign donor</a>
+                <a class="btn secondary" href="#status">Mark as handled</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="table-card" id="matching">
+          <div class="panel-header">
+            <div>
+              <h3>Donor Matching Panel</h3>
+              <p>Filter donors by blood group, location, and availability.</p>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <span class="filter-chip">Blood group: A+</span>
+            <span class="filter-chip">Location: Dhaka</span>
+            <span class="filter-chip">Available: Yes</span>
+          </div>
+
+          <div class="matching-list">
+            <article class="match-card">
+              <div class="user-top">
+                <div class="user-meta">
+                  <strong>Rahim Ahmed</strong>
+                  <span>A+ · Mirpur · Available</span>
+                </div>
+                <span class="role-tag">Best match</span>
+              </div>
+              <div class="assign-actions">
+                <a class="btn" href="#status">Assign donor to request</a>
+              </div>
+            </article>
+
+            <article class="match-card">
+              <div class="user-top">
+                <div class="user-meta">
+                  <strong>Karim Hassan</strong>
+                  <span>O+ · Uttara · Available</span>
+                </div>
+                <span class="role-tag">Ready</span>
+              </div>
+              <div class="assign-actions">
+                <a class="btn" href="#status">Assign donor to request</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="table-card" id="status">
+          <div class="panel-header">
+            <div>
+              <h3>Request Status Management</h3>
+              <p>Update requests from pending to assigned and completed.</p>
+            </div>
+          </div>
+
+          <div class="overview-list">
+            <article class="overview-card">
+              <div class="overview-meta">
+                <strong>Request PR-2041</strong>
+                <span>Pending → Assigned → Completed</span>
+              </div>
+              <div class="status-actions">
+                <span class="request-state">Pending</span>
+                <span class="request-state">Assigned</span>
+                <span class="request-state">Completed</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <div class="bottom-grid">
+        <section class="panel" id="notifications">
+          <div class="panel-header">
+            <div>
+              <h3>Notifications Panel</h3>
+              <p>New request alerts and donation completion messages.</p>
+            </div>
+          </div>
+          <div class="notify-list">
+            <article class="notify-card">
+              <strong>New request alert</strong>
+              <span>A high priority request was posted nearby.</span>
+            </article>
+            <article class="notify-card">
+              <strong>Donation completed alert</strong>
+              <span>A donor has completed the assigned request.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Emergency Requests</h3>
+              <p>Highlighted red cards for urgent cases.</p>
+            </div>
+          </div>
+          <div class="flash-list">
+            <article class="flash-card">
+              <strong>O- Needed · Emergency</strong>
+              <span>City Hospital ICU · Mirpur · posted 5 min ago</span>
+            </article>
+            <article class="flash-card high">
+              <strong>A+ Needed · Emergency</strong>
+              <span>Medical College Unit · Uttara · posted 9 min ago</span>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

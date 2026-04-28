@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Full system control for users, requests, analytics, and settings.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <a class="chip profile-chip" href="#overview">Profile</a>
+        <a class="chip" href="login.html">Sign out</a>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Dashboard sections">
+      <a class="active" href="#overview">Overview</a>
+      <a href="#users">Users</a>
+      <a href="#blood-system">Blood System</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#settings">System Settings</a>
+    </nav>
+
+    <section class="dashboard-content" id="overview">
+      <div class="hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">Superuser control</div>
+          <h2>Manage the full blood donation system.</h2>
+          <p>
+            Monitor users, blood requests, analytics, and system-wide settings from one place.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="#users">View users</a>
+            <a class="btn secondary" href="#analytics">Open analytics</a>
+          </div>
+        </article>
+
+        <aside class="side-card">
+          <h3>System overview</h3>
+          <p>Everything important in one control panel.</p>
+          <ul>
+            <li>User management by role</li>
+            <li>Blood system overview</li>
+            <li>Settings and analytics view</li>
+          </ul>
+        </aside>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat">
+          <div class="label">Total requests</div>
+          <div class="value">128</div>
+          <div class="delta">System-wide count</div>
+        </article>
+        <article class="stat">
+          <div class="label">Completed donations</div>
+          <div class="value">94</div>
+          <div class="delta">Finished successfully</div>
+        </article>
+        <article class="stat">
+          <div class="label">Pending requests</div>
+          <div class="value">34</div>
+          <div class="delta">Waiting to be handled</div>
+        </article>
+      </div>
+
+      <div class="admin-grid">
+        <section class="panel" id="users">
+          <div class="panel-header">
+            <div>
+              <h3>User Management</h3>
+              <p>View users and filter by role.</p>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-chip">Donor</span>
+            <span class="filter-chip">Patient</span>
+            <span class="filter-chip">Volunteer</span>
+          </div>
+          <div class="user-list">
+            <article class="user-card">
+              <div class="user-top">
+                <div class="user-meta">
+                  <strong>Rahim Ahmed</strong>
+                  <span>Donor · A+ · Active</span>
+                </div>
+                <span class="role-tag">Donor</span>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
+              </div>
+            </article>
+            <article class="user-card">
+              <div class="user-top">
+                <div class="user-meta">
+                  <strong>Fahim Khan</strong>
+                  <span>Patient · Request pending</span>
+                </div>
+                <span class="role-tag">Patient</span>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="table-card" id="blood-system">
+          <div class="panel-header">
+            <div>
+              <h3>Blood System Overview</h3>
+              <p>High-level request and donation counts.</p>
+            </div>
+          </div>
+          <div class="overview-list">
+            <article class="overview-card">
+              <div class="overview-meta">
+                <strong>Total requests</strong>
+                <span>128 requests recorded</span>
+              </div>
+            </article>
+            <article class="overview-card">
+              <div class="overview-meta">
+                <strong>Completed donations</strong>
+                <span>94 donations finished</span>
+              </div>
+            </article>
+            <article class="overview-card">
+              <div class="overview-meta">
+                <strong>Pending requests</strong>
+                <span>34 requests still open</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="table-card" id="analytics">
+          <div class="panel-header">
+            <div>
+              <h3>Analytics Panel</h3>
+              <p>Core metrics for project marks and reporting.</p>
+            </div>
+          </div>
+          <div class="analytics-list">
+            <div class="analytics-row">
+              <span>Total donors</span>
+              <div class="track"><div class="fill" style="width: 82%"></div></div>
+              <strong>320</strong>
+            </div>
+            <div class="analytics-row">
+              <span>Total patients</span>
+              <div class="track"><div class="fill" style="width: 66%"></div></div>
+              <strong>148</strong>
+            </div>
+            <div class="analytics-row">
+              <span>A+ distribution</span>
+              <div class="track"><div class="fill" style="width: 74%"></div></div>
+              <strong>74%</strong>
+            </div>
+            <div class="analytics-row">
+              <span>Monthly donations</span>
+              <div class="track"><div class="fill" style="width: 58%"></div></div>
+              <strong>58</strong>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="bottom-grid">
+        <section class="panel" id="settings">
+          <div class="panel-header">
+            <div>
+              <h3>System Settings</h3>
+              <p>Manage rules, roles, and emergency controls.</p>
+            </div>
+          </div>
+          <div class="settings-list-admin">
+            <div class="settings-line">
+              <strong>Manage roles</strong>
+              <span>Update donor, patient, and volunteer permissions.</span>
+            </div>
+            <div class="settings-line">
+              <strong>Configure system rules</strong>
+              <span>Set approval and request handling rules.</span>
+            </div>
+            <div class="settings-line">
+              <strong>Emergency settings</strong>
+              <span>Adjust urgent request priority rules.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
