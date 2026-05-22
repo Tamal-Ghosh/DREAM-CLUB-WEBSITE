@@ -1,73 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Basic page setup -->
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/site-shell.css">
 </head>
-<body>
-
-  <!-- Top navigation -->
-  <nav class="navbar">
-    <div class="brand-logos" aria-label="Club and KUET logos">
-      <img src="../assets/logo.jpg" alt="Club logo">
-      <img src="../assets/logoKuet.png" alt="KUET logo">
+<body data-page="home">
+  <header class="site-header">
+    <div class="site-shell-inner">
+      <a class="site-brand" href="home.html" aria-label="Dream home">
+        <div class="site-brand-logos" aria-hidden="true">
+          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
+          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
+        </div>
+        <div class="site-brand-copy">
+          <strong>Dream</strong>
+          <span>Blood donation support network</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="home.html" data-page="home">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="our_team.html" data-page="team">Our Team</a>
+        <a href="contact.html" data-page="contact">Contact</a>
+        <a href="request.html" data-page="request">Request Blood</a>
+        <a href="login.html" data-page="login">Login</a>
+      </nav>
     </div>
+  </header>
+  <main>
+    <section class="hero">
+      <h1>Donate Blood, Save Lives</h1>
+      <p>Your small help can save someone's life</p>
+      <div class="buttons">
+        <a class="btn" href="register.html">Become Donor</a>
+        <a class="btn outline" href="patient_dashboard.html">Request Blood</a>
+      </div>
+    </section>
 
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Donate</a></li>
-      <li><a href="#">Request</a></li>
-      <li><a href="#">Contact</a></li>
-      <li><a href="#">Login</a></li>
-    </ul>
-  </nav>
+    <section class="gallery" aria-label="Club photo gallery">
+      <div class="gallery-header">
+        <h2>Club Photo Gallery</h2>
+        <p>Add your best club photos here.</p>
+      </div>
 
-  <!-- Main welcome section -->
-  <section class="hero">
-    <h1>Donate Blood, Save Lives ❤️</h1>
-    <p>Your small help can save someone's life</p>
-    <div class="buttons">
-      <button class="btn">Become Donor</button>
-      <button class="btn outline">Request Blood</button>
-    </div>
-  </section>
+      <div class="gallery-grid">
+        <div class="gallery-item">Photo 1</div>
+        <div class="gallery-item">Photo 2</div>
+        <div class="gallery-item">Photo 3</div>
+        <div class="gallery-item">Photo 4</div>
+        <div class="gallery-item">Photo 5</div>
+        <div class="gallery-item">Photo 6</div>
+      </div>
+    </section>
+  </main>
 
-  <!-- About section -->
-  <section class="about">
-    <h2>About Us</h2>
-    <p>We connect blood donors with patients in need quickly and efficiently.</p>
-  </section>
-
-  <!-- Feature cards -->
-  <section class="features">
-    <div class="card">
-      <h3>Find Donors</h3>
-      <p>Search donors by blood group and location.</p>
-    </div>
-    <div class="card">
-      <h3>Quick Requests</h3>
-      <p>Post urgent blood requests easily.</p>
-    </div>
-    <div class="card">
-      <h3>Volunteer Support</h3>
-      <p>Our team helps manage emergencies.</p>
-    </div>
-  </section>
-
-  <!-- Call to action -->
-  <section class="cta">
-    <h2>Be a Hero Today</h2>
-    <button class="btn">Join Now</button>
-  </section>
-
-  <!-- Footer -->
   <footer class="site-footer">
-    <img class="footer-logo left" src="../assets/logo.jpg" alt="Club logo">
-    <p>© 2026 Dream</p>
-    <img class="footer-logo right" src="../assets/logoKuet.png" alt="KUET logo">
+    <div class="site-shell-inner">
+      <div class="site-brand-copy">
+        <strong>Dream</strong>
+        <span>© 2026 Dream. Stay connected, stay ready.</span>
+      </div>
+    </div>
   </footer>
+
+  <script src="js/site-shell.js" defer></script>
 
 </body>
 </html>

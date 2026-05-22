@@ -8,10 +8,33 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/site-shell.css">
 </head>
-<body>
+<body data-page="volunteer">
+  <header class="site-header">
+    <div class="site-shell-inner">
+      <a class="site-brand" href="home.html" aria-label="Dream home">
+        <div class="site-brand-logos" aria-hidden="true">
+          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
+          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
+        </div>
+        <div class="site-brand-copy">
+          <strong>Dream</strong>
+          <span>Blood donation support network</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="home.html" data-page="home">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="our_team.html" data-page="team">Our Team</a>
+        <a href="contact.html" data-page="contact">Contact</a>
+        <a href="request.html" data-page="request">Request Blood</a>
+        <a href="login.html" data-page="login">Login</a>
+      </nav>
+    </div>
+  </header>
   <main class="dashboard-shell">
-    <header class="topbar">
+    <div class="topbar">
       <div class="brand">
         <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
         <div>
@@ -23,14 +46,13 @@
         <a class="chip profile-chip" href="#overview">Profile</a>
         <a class="chip" href="login.html">Sign out</a>
       </div>
-    </header>
+    </div>
 
     <nav class="nav" aria-label="Dashboard sections">
       <a class="active" href="#overview">Overview</a>
       <a href="#queue">Queue</a>
       <a href="#matching">Matching</a>
       <a href="#status">Status</a>
-      <a href="#notifications">Notifications</a>
     </nav>
 
     <section class="dashboard-content" id="overview">
@@ -174,46 +196,35 @@
         </section>
       </div>
 
-      <div class="bottom-grid">
-        <section class="panel" id="notifications">
-          <div class="panel-header">
-            <div>
-              <h3>Notifications Panel</h3>
-              <p>New request alerts and donation completion messages.</p>
-            </div>
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h3>Emergency Requests</h3>
+            <p>Highlighted red cards for urgent cases.</p>
           </div>
-          <div class="notify-list">
-            <article class="notify-card">
-              <strong>New request alert</strong>
-              <span>A high priority request was posted nearby.</span>
-            </article>
-            <article class="notify-card">
-              <strong>Donation completed alert</strong>
-              <span>A donor has completed the assigned request.</span>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-header">
-            <div>
-              <h3>Emergency Requests</h3>
-              <p>Highlighted red cards for urgent cases.</p>
-            </div>
-          </div>
-          <div class="flash-list">
-            <article class="flash-card">
-              <strong>O- Needed · Emergency</strong>
-              <span>City Hospital ICU · Mirpur · posted 5 min ago</span>
-            </article>
-            <article class="flash-card high">
-              <strong>A+ Needed · Emergency</strong>
-              <span>Medical College Unit · Uttara · posted 9 min ago</span>
-            </article>
-          </div>
-        </section>
-      </div>
+        </div>
+        <div class="flash-list">
+          <article class="flash-card">
+            <strong>O- Needed · Emergency</strong>
+            <span>City Hospital ICU · Mirpur · posted 5 min ago</span>
+          </article>
+          <article class="flash-card high">
+            <strong>A+ Needed · Emergency</strong>
+            <span>Medical College Unit · Uttara · posted 9 min ago</span>
+          </article>
+        </div>
+      </section>
     </section>
   </main>
+  <footer class="site-footer">
+    <div class="site-shell-inner">
+      <div class="site-brand-copy">
+        <strong>Dream</strong>
+        <span>© 2026 Dream. Stay connected, stay ready.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-shell.js" defer></script>
 </body>
 </html>

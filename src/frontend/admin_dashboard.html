@@ -8,54 +8,64 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/site-shell.css">
 </head>
-<body>
+<body data-page="admin">
+  <header class="site-header">
+    <div class="site-shell-inner">
+      <a class="site-brand" href="home.html" aria-label="Dream home">
+        <div class="site-brand-logos" aria-hidden="true">
+          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
+          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
+        </div>
+        <div class="site-brand-copy">
+          <strong>Dream</strong>
+          <span>Blood donation support network</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="home.html" data-page="home">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="our_team.html" data-page="team">Our Team</a>
+        <a href="contact.html" data-page="contact">Contact</a>
+        <a href="request.html" data-page="request">Request Blood</a>
+        <a href="login.html" data-page="login">Login</a>
+      </nav>
+    </div>
+  </header>
   <main class="dashboard-shell">
-    <header class="topbar">
+    <div class="topbar">
       <div class="brand">
         <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
         <div>
           <h1>Admin Dashboard</h1>
-          <p>Full system control for users, requests, analytics, and settings.</p>
+          <p>Full system control for users and requests.</p>
         </div>
       </div>
       <div class="top-actions">
         <a class="chip profile-chip" href="#overview">Profile</a>
         <a class="chip" href="login.html">Sign out</a>
       </div>
-    </header>
+    </div>
 
     <nav class="nav" aria-label="Dashboard sections">
       <a class="active" href="#overview">Overview</a>
       <a href="#users">Users</a>
       <a href="#blood-system">Blood System</a>
-      <a href="#analytics">Analytics</a>
-      <a href="#settings">System Settings</a>
     </nav>
 
     <section class="dashboard-content" id="overview">
-      <div class="hero-grid">
+      <div class="hero-grid admin-hero-grid">
         <article class="hero-card">
           <div class="eyebrow">Superuser control</div>
           <h2>Manage the full blood donation system.</h2>
           <p>
-            Monitor users, blood requests, analytics, and system-wide settings from one place.
+            Monitor users and blood requests from one place.
           </p>
           <div class="hero-actions">
             <a class="btn" href="#users">View users</a>
-            <a class="btn secondary" href="#analytics">Open analytics</a>
           </div>
         </article>
-
-        <aside class="side-card">
-          <h3>System overview</h3>
-          <p>Everything important in one control panel.</p>
-          <ul>
-            <li>User management by role</li>
-            <li>Blood system overview</li>
-            <li>Settings and analytics view</li>
-          </ul>
-        </aside>
       </div>
 
       <div class="stats-grid">
@@ -148,63 +158,18 @@
           </div>
         </section>
 
-        <section class="table-card" id="analytics">
-          <div class="panel-header">
-            <div>
-              <h3>Analytics Panel</h3>
-              <p>Core metrics for project marks and reporting.</p>
-            </div>
-          </div>
-          <div class="analytics-list">
-            <div class="analytics-row">
-              <span>Total donors</span>
-              <div class="track"><div class="fill" style="width: 82%"></div></div>
-              <strong>320</strong>
-            </div>
-            <div class="analytics-row">
-              <span>Total patients</span>
-              <div class="track"><div class="fill" style="width: 66%"></div></div>
-              <strong>148</strong>
-            </div>
-            <div class="analytics-row">
-              <span>A+ distribution</span>
-              <div class="track"><div class="fill" style="width: 74%"></div></div>
-              <strong>74%</strong>
-            </div>
-            <div class="analytics-row">
-              <span>Monthly donations</span>
-              <div class="track"><div class="fill" style="width: 58%"></div></div>
-              <strong>58</strong>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div class="bottom-grid">
-        <section class="panel" id="settings">
-          <div class="panel-header">
-            <div>
-              <h3>System Settings</h3>
-              <p>Manage rules, roles, and emergency controls.</p>
-            </div>
-          </div>
-          <div class="settings-list-admin">
-            <div class="settings-line">
-              <strong>Manage roles</strong>
-              <span>Update donor, patient, and volunteer permissions.</span>
-            </div>
-            <div class="settings-line">
-              <strong>Configure system rules</strong>
-              <span>Set approval and request handling rules.</span>
-            </div>
-            <div class="settings-line">
-              <strong>Emergency settings</strong>
-              <span>Adjust urgent request priority rules.</span>
-            </div>
-          </div>
-        </section>
       </div>
     </section>
   </main>
+  <footer class="site-footer">
+    <div class="site-shell-inner">
+      <div class="site-brand-copy">
+        <strong>Dream</strong>
+        <span>© 2026 Dream. Stay connected, stay ready.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-shell.js" defer></script>
 </body>
 </html>

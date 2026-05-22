@@ -3,84 +3,68 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: cursive;
+  font-family: "Manrope", sans-serif;
 }
 
 body {
-  background: #f9f9f9;
+  background:
+    radial-gradient(circle at top left, #fff0ea 0%, transparent 36%),
+    radial-gradient(circle at top right, #ffe7ec 0%, transparent 28%),
+    linear-gradient(180deg, #fffdfc 0%, #fff4ef 100%);
+  color: #4a1e1e;
 }
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 50px;
-  background: #520101;
-  color: white;
-  border-bottom: rgb(174, 73, 73) 2px solid;
+.hero,
+.gallery {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
 }
 
-.brand-logos {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logos img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #fff;
-}
-
-.brand-logos img:last-child {
-  object-fit: contain;
-}
-
-.navbar ul {
-  display: flex;
-  list-style: none;
-}
-
-.navbar ul li {
-  margin-left: 20px;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-}
-
-/* Hero section */
 .hero {
   text-align: center;
-  padding: 100px 20px;
-  background: #ffe6e6;
+  padding: 74px 24px 66px;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 245, 0.96), rgba(255, 232, 228, 0.98));
+  border-radius: 0 0 28px 28px;
+  border-bottom: 1px solid rgba(179, 0, 0, 0.08);
 }
 
 .hero h1 {
-  font-size: 40px;
-  color: #b30000;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 1.02;
+  color: #b11414;
+  max-width: 14ch;
+  margin: 0 auto;
 }
 
 .hero p {
-  margin: 10px 0;
+  margin-top: 14px;
+  font-size: 1.05rem;
+  color: #7a3a3a;
 }
 
-/* Hero buttons */
 .buttons {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .btn {
-  padding: 10px 20px;
-  margin: 5px;
-  background: #b30000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #b30000, #d94d2d);
   color: white;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 16px 28px rgba(179, 0, 0, 0.18);
 }
 
 .btn.outline {
@@ -89,64 +73,62 @@ body {
   color: #b30000;
 }
 
-/* About */
-.about {
-  padding: 50px;
+.gallery {
+  padding: 56px 24px 84px;
+}
+
+.gallery-header {
   text-align: center;
+  margin-bottom: 24px;
 }
 
-/* Features */
-.features {
-  display: flex;
-  justify-content: center;
-  padding: 50px;
-  gap: 20px;
+.gallery-header h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: #b11414;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  width: 250px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.gallery-header p {
+  margin-top: 8px;
+  color: #7a3a3a;
 }
 
-/* CTA */
-.cta {
-  text-align: center;
-  padding: 50px;
-  background: #b30000;
-  color: white;
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
-/* Footer */
-.site-footer {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
-  background: #222;
-  color: white;
+.gallery-item {
+  min-height: 220px;
+  border-radius: 22px;
+  border: 2px dashed rgba(161, 15, 15, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 32px rgba(118, 34, 34, 0.08);
+  display: grid;
+  place-items: center;
+  color: rgba(177, 20, 20, 0.6);
+  font-weight: 700;
 }
 
-.footer-logo {
-  position: absolute;
-  top: 50%;
-  width: 40px;
-  height: 40px;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  object-fit: cover;
-  background: #fff;
+@media (max-width: 920px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.footer-logo.left {
-  left: 20px;
-}
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 56px;
+    padding-bottom: 52px;
+  }
 
-.footer-logo.right {
-  right: 20px;
-  object-fit: contain;
+  .gallery {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .gallery {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
 }

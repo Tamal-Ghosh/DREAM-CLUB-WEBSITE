@@ -1,0 +1,131 @@
+body.has-site-shell {
+  font-family: 'Manrope', sans-serif;
+}
+
+.page-hero {
+  padding: 30px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(127, 31, 24, 0.98), rgba(204, 74, 36, 0.96));
+  color: #fff8f6;
+  box-shadow: 0 18px 40px rgba(95, 35, 23, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.page-hero h1,
+.about-card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.page-hero h1 {
+  font-size: clamp(2.1rem, 3.4vw, 3.2rem);
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #fff8f6;
+}
+
+.page-hero p {
+  max-width: 70ch;
+  line-height: 1.75;
+  color: rgba(255, 248, 246, 0.88);
+}
+
+.page-hero .pill {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff8f6;
+}
+
+.page-hero .pill-link {
+  color: #fff8f6;
+  text-decoration: none;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.about-card {
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(241, 194, 184, 0.9);
+  box-shadow: 0 16px 30px rgba(95, 35, 23, 0.08);
+}
+
+.about-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #7f1f18;
+}
+
+.about-card p,
+.about-card li {
+  line-height: 1.75;
+  color: #5e3a32;
+}
+
+.about-card ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.about-spotlight {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.about-spotlight strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #7f1f18;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pill-link {
+  text-decoration: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(204, 74, 36, 0.1);
+  color: #8f2b1f;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .page-hero h1 {
+    font-size: 2rem;
+  }
+
+  .page-grid,
+  .about-spotlight {
+    grid-template-columns: 1fr;
+  }
+
+  main {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .page-hero,
+  .about-card {
+    padding: 20px;
+  }
+}

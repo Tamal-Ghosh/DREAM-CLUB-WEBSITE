@@ -8,10 +8,33 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/site-shell.css">
 </head>
-<body>
+<body data-page="patient">
+  <header class="site-header">
+    <div class="site-shell-inner">
+      <a class="site-brand" href="home.html" aria-label="Dream home">
+        <div class="site-brand-logos" aria-hidden="true">
+          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
+          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
+        </div>
+        <div class="site-brand-copy">
+          <strong>Dream</strong>
+          <span>Blood donation support network</span>
+        </div>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="home.html" data-page="home">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="our_team.html" data-page="team">Our Team</a>
+        <a href="contact.html" data-page="contact">Contact</a>
+        <a href="request.html" data-page="request">Request Blood</a>
+        <a href="login.html" data-page="login">Login</a>
+      </nav>
+    </div>
+  </header>
   <main class="dashboard-shell">
-    <header class="topbar">
+    <div class="topbar">
       <div class="brand">
         <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
         <div>
@@ -20,21 +43,22 @@
         </div>
       </div>
       <div class="top-actions">
-        <a class="chip profile-chip" href="#overview">Profile</a>
-        <a class="chip" href="login.html">Sign out</a>
       </div>
-    </header>
+    </div>
 
     <nav class="nav" aria-label="Dashboard sections">
       <a class="active" href="#overview">Overview</a>
       <a href="#create-request">Create Request</a>
       <a href="#my-requests">My Requests</a>
       <a href="#assigned-donor">Assigned Donor</a>
-      <a href="#notifications">Notifications</a>
     </nav>
 
     <section class="dashboard-content" id="overview">
       <!-- Patient summary at the top -->
+
+      <div class="hero-grid patient-hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">Patient support</div>
 
           <h2>Make a request and follow every update in one place.</h2>
           <p>
@@ -166,56 +190,40 @@
         </section>
       </div>
 
-      <div class="patient-grid">
-        <section class="patient-card" id="assigned-donor">
-          <div class="panel-header">
-            <div>
-              <h3>Assigned Donor Info</h3>
-              <p>Starts with no donor, then shows donor details after acceptance.</p>
-            </div>
+      <section class="patient-card" id="assigned-donor">
+        <div class="panel-header">
+          <div>
+            <h3>Assigned Donor Info</h3>
+            <p>Starts with no donor, then shows donor details after acceptance.</p>
           </div>
+        </div>
 
-          <div class="assigned-donor">
-            <div class="assigned-card">
-              <strong>No donor assigned yet</strong>
-              <span>Wait here until a donor accepts your request.</span>
-            </div>
-            <div class="assigned-card">
-              <strong>Donor info after acceptance</strong>
-              <span>Donor name, contact number, and donation status will appear here.</span>
-            </div>
-            <div class="assigned-card">
-              <strong>Completed</strong>
-              <span>After the donor info section, the request can move to completed.</span>
-            </div>
+        <div class="assigned-donor">
+          <div class="assigned-card">
+            <strong>No donor assigned yet</strong>
+            <span>Wait here until a donor accepts your request.</span>
           </div>
-        </section>
-
-        <section class="patient-card" id="notifications">
-          <div class="panel-header">
-            <div>
-              <h3>Notifications</h3>
-              <p>Simple updates while you wait.</p>
-            </div>
+          <div class="assigned-card">
+            <strong>Donor info after acceptance</strong>
+            <span>Donor name, contact number, and donation status will appear here.</span>
           </div>
-
-          <div class="notification-stack">
-            <div class="notification-pill">
-              <strong>Donor found</strong>
-              <span>A matching donor has been assigned to your request.</span>
-            </div>
-            <div class="notification-pill">
-              <strong>Request accepted</strong>
-              <span>The request was accepted by the support team.</span>
-            </div>
-            <div class="notification-pill">
-              <strong>Blood delivered</strong>
-              <span>The blood delivery update will appear here after completion.</span>
-            </div>
+          <div class="assigned-card">
+            <strong>Completed</strong>
+            <span>After the donor info section, the request can move to completed.</span>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </section>
   </main>
+  <footer class="site-footer">
+    <div class="site-shell-inner">
+      <div class="site-brand-copy">
+        <strong>Dream</strong>
+        <span>© 2026 Dream. Stay connected, stay ready.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site-shell.js" defer></script>
 </body>
 </html>
