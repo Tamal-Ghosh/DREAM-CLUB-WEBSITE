@@ -8,7 +8,6 @@
       about: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       contact: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       team: ['public', 'donor', 'patient', 'volunteer', 'admin'],
-      request: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       donor: ['donor', 'volunteer'],
       patient: ['patient', 'volunteer'],
       volunteer: ['volunteer'],
@@ -57,6 +56,33 @@
         localStorage.removeItem('userName');
         window.location.href = 'login.html';
       });
+    }
+
+    const userMenu = document.querySelector('.user-menu');
+    if (userMenu && !userMenu.dataset.shellBound) {
+      userMenu.dataset.shellBound = 'true';
+      const trigger = userMenu.querySelector('.user-trigger');
+      const dropdown = userMenu.querySelector('.user-dropdown');
+      if (trigger && dropdown) {
+        const closeMenu = () => {
+          dropdown.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+        };
+
+        trigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          dropdown.hidden = isOpen;
+          trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        });
+
+        document.addEventListener('click', closeMenu);
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMenu();
+          }
+        });
+      }
     }
   };
 

@@ -28,32 +28,19 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="request.html" data-page="request">Request Blood</a>
-        <a href="login.html" data-page="login">Login</a>
+        <div class="site-nav-user user-menu" aria-label="User menu">
+          <button class="user-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="user-circle" aria-hidden="true">A</span>
+          </button>
+          <div class="user-dropdown" role="menu" hidden>
+            <a class="user-dropdown-item" role="menuitem" href="#profile">Profile</a>
+            <a class="user-dropdown-item" role="menuitem" href="login.html" id="logoutBtn">Log out</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
   <main class="dashboard-shell">
-    <div class="topbar">
-      <div class="brand">
-        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
-        <div>
-          <h1>Admin Dashboard</h1>
-          <p>Full system control for users and requests.</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <a class="chip profile-chip" href="#overview">Profile</a>
-        <a class="chip" href="login.html">Sign out</a>
-      </div>
-    </div>
-
-    <nav class="nav" aria-label="Dashboard sections">
-      <a class="active" href="#overview">Overview</a>
-      <a href="#users">Users</a>
-      <a href="#blood-system">Blood System</a>
-    </nav>
-
     <section class="dashboard-content" id="overview">
       <div class="hero-grid admin-hero-grid">
         <article class="hero-card">
@@ -68,7 +55,7 @@
         </article>
       </div>
 
-      <div class="stats-grid">
+      <div class="stats-grid stats-quad">
         <article class="stat">
           <div class="label">Total requests</div>
           <div class="value">128</div>
@@ -84,75 +71,177 @@
           <div class="value">34</div>
           <div class="delta">Waiting to be handled</div>
         </article>
+        <article class="stat">
+          <div class="label">Total donors</div>
+          <div class="value">210</div>
+          <div class="delta">Registered donors</div>
+        </article>
       </div>
 
-      <div class="admin-grid">
-        <section class="panel" id="users">
+      <div class="admin-grid full-width">
+        <section class="table-card admin-wide" id="requests">
+          <div class="panel-header">
+            <div>
+              <h3>Blood Request Management</h3>
+              <p>Review requests, assign volunteers, and complete cases.</p>
+            </div>
+          </div>
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient</th>
+                  <th>Blood</th>
+                  <th>Units</th>
+                  <th>Hospital</th>
+                  <th>Location</th>
+                  <th>Urgency</th>
+                  <th>Phone</th>
+                  <th>Donor Name</th>
+                  <th>Donor Phone</th>
+                  <th>Status</th>
+                  <th>Assign Donor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PR-2041</td>
+                  <td>Nusrat Khan</td>
+                  <td>A+</td>
+                  <td>2</td>
+                  <td>City Hospital</td>
+                  <td>Mirpur, Dhaka</td>
+                  <td>Critical</td>
+                  <td>01XXXXXXXXX</td>
+                  <td class="donor-name">—</td>
+                  <td class="donor-phone">—</td>
+                  <td>
+                    <select class="status-select" aria-label="Update status for PR-2041">
+                      <option selected>Pending</option>
+                      <option>Under Review</option>
+                      <option>Donor Matched</option>
+                      <option>Completed</option>
+                      <option>Rejected</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn small assign-btn" type="button">Assign Donor</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>PR-2042</td>
+                  <td>Rahim Uddin</td>
+                  <td>O-</td>
+                  <td>3</td>
+                  <td>National Medical</td>
+                  <td>Uttara, Dhaka</td>
+                  <td>Urgent</td>
+                  <td>01XXXXXXXXX</td>
+                  <td class="donor-name">—</td>
+                  <td class="donor-phone">—</td>
+                  <td>
+                    <select class="status-select" aria-label="Update status for PR-2042">
+                      <option>Pending</option>
+                      <option selected>Under Review</option>
+                      <option>Donor Matched</option>
+                      <option>Completed</option>
+                      <option>Rejected</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn small assign-btn" type="button">Assign Donor</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel admin-wide" id="users">
           <div class="panel-header">
             <div>
               <h3>User Management</h3>
               <p>View users and filter by role.</p>
             </div>
-          </div>
-          <div class="filter-row">
-            <span class="filter-chip">Donor</span>
-            <span class="filter-chip">Patient</span>
-            <span class="filter-chip">Volunteer</span>
-          </div>
-          <div class="user-list">
-            <article class="user-card">
-              <div class="user-top">
-                <div class="user-meta">
-                  <strong>Rahim Ahmed</strong>
-                  <span>Donor · A+ · Active</span>
-                </div>
-                <span class="role-tag">Donor</span>
-              </div>
-              <div class="settings-actions">
-                <a class="btn secondary" href="#">Change role</a>
-                <a class="btn" href="#">Block user</a>
-              </div>
-            </article>
-            <article class="user-card">
-              <div class="user-top">
-                <div class="user-meta">
-                  <strong>Fahim Khan</strong>
-                  <span>Patient · Request pending</span>
-                </div>
-                <span class="role-tag">Patient</span>
-              </div>
-              <div class="settings-actions">
-                <a class="btn secondary" href="#">Change role</a>
-                <a class="btn" href="#">Block user</a>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="table-card" id="blood-system">
-          <div class="panel-header">
-            <div>
-              <h3>Blood System Overview</h3>
-              <p>High-level request and donation counts.</p>
+            <div class="panel-actions">
+              <input class="user-search" type="search" placeholder="Search users" aria-label="Search users">
             </div>
           </div>
-          <div class="overview-list">
-            <article class="overview-card">
-              <div class="overview-meta">
-                <strong>Total requests</strong>
-                <span>128 requests recorded</span>
+          <div class="filter-row">
+            <span class="filter-chip">All</span>
+            <span class="filter-chip">Admin</span>
+            <span class="filter-chip">Volunteer</span>
+            <span class="filter-chip">Patient</span>
+            <span class="filter-chip">Donor</span>
+          </div>
+          <div class="user-card-grid">
+            <article class="user-card-item">
+              <div class="user-card-top">
+                <span class="user-avatar" aria-hidden="true">RA</span>
+                <div>
+                  <span class="user-role-pill">Donor</span>
+                  <h4>Rahim Ahmed</h4>
+                </div>
+              </div>
+              <div class="user-card-details">
+                <div class="user-detail-row"><span>Phone</span><span>01700000000</span></div>
+                <div class="user-detail-row"><span>Blood Group</span><span>A+</span></div>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
               </div>
             </article>
-            <article class="overview-card">
-              <div class="overview-meta">
-                <strong>Completed donations</strong>
-                <span>94 donations finished</span>
+            <article class="user-card-item">
+              <div class="user-card-top">
+                <span class="user-avatar" aria-hidden="true">SR</span>
+                <div>
+                  <span class="user-role-pill">Volunteer</span>
+                  <h4>Samira Rahman</h4>
+                </div>
+              </div>
+              <div class="user-card-details">
+                <div class="user-detail-row"><span>Phone</span><span>01800000000</span></div>
+                <div class="user-detail-row"><span>Blood Group</span><span>O+</span></div>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
               </div>
             </article>
-            <article class="overview-card">
-              <div class="overview-meta">
-                <strong>Pending requests</strong>
-                <span>34 requests still open</span>
+            <article class="user-card-item">
+              <div class="user-card-top">
+                <span class="user-avatar" aria-hidden="true">FK</span>
+                <div>
+                  <span class="user-role-pill">Patient</span>
+                  <h4>Fahim Khan</h4>
+                </div>
+              </div>
+              <div class="user-card-details">
+                <div class="user-detail-row"><span>Phone</span><span>01900000000</span></div>
+                <div class="user-detail-row"><span>Blood Group</span><span>B+</span></div>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
+              </div>
+            </article>
+            <article class="user-card-item">
+              <div class="user-card-top">
+                <span class="user-avatar" aria-hidden="true">AK</span>
+                <div>
+                  <span class="user-role-pill">Admin</span>
+                  <h4>Ayesha Karim</h4>
+                </div>
+              </div>
+              <div class="user-card-details">
+                <div class="user-detail-row"><span>Phone</span><span>01600000000</span></div>
+                <div class="user-detail-row"><span>Blood Group</span><span>AB+</span></div>
+              </div>
+              <div class="settings-actions">
+                <a class="btn secondary" href="#">Change role</a>
+                <a class="btn" href="#">Block user</a>
               </div>
             </article>
           </div>

@@ -29,7 +29,6 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="request.html" data-page="request">Request Blood</a>
         <a href="login.html" data-page="login">Login</a>
       </nav>
     </div>
@@ -58,6 +57,16 @@
           <input id="email" name="email" type="email" placeholder="you@example.com" required>
         </div>
 
+        <!-- Role selection -->
+        <div class="field">
+          <label for="role">Register As</label>
+          <select id="role" name="role" required>
+            <option value="" disabled>Select role</option>
+            <option value="patient">Patient</option>
+            <option value="donor" selected>Donor</option>
+          </select>
+        </div>
+
         <!-- Blood group and phone -->
         <div class="field-grid">
           <div class="field">
@@ -77,22 +86,6 @@
           <div class="field">
             <label for="phone">Phone Number</label>
             <input id="phone" name="phone" type="tel" placeholder="0123456789" required>
-          </div>
-        </div>
-
-        <!-- Current address input -->
-        <div class="field-grid address-grid">
-          <div class="field">
-            <label for="district">District</label>
-            <input id="district" name="district" type="text" placeholder="Type district name" required>
-          </div>
-          <div class="field">
-            <label for="thana">Thana</label>
-            <input id="thana" name="thana" type="text" placeholder="Type thana name" required>
-          </div>
-          <div class="field village-field">
-            <label for="village">Village / Area</label>
-            <input id="village" name="village" type="text" placeholder="Village, area, or locality" required>
           </div>
         </div>
 

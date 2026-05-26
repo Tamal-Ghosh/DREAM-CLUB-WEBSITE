@@ -33,6 +33,7 @@ body.has-site-shell {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
   gap: 20px;
+  align-items: start;
 }
 
 .request-card {
@@ -64,7 +65,9 @@ body.has-site-shell {
 .request-field input,
 .request-field select,
 .request-field textarea {
+  display: block;
   width: 100%;
+  box-sizing: border-box;
   border-radius: 14px;
   border: 1px solid rgba(241, 194, 184, 0.95);
   background: rgba(255, 255, 255, 0.9);

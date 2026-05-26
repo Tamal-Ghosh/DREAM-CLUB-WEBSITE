@@ -28,31 +28,19 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="request.html" data-page="request">Request Blood</a>
-        <a href="login.html" data-page="login">Login</a>
+        <div class="site-nav-user user-menu" aria-label="User menu">
+          <button class="user-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="user-circle" aria-hidden="true">P</span>
+          </button>
+          <div class="user-dropdown" role="menu" hidden>
+            <a class="user-dropdown-item" role="menuitem" href="#profile">Profile</a>
+            <a class="user-dropdown-item" role="menuitem" href="login.html" id="logoutBtn">Log out</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
   <main class="dashboard-shell">
-    <div class="topbar">
-      <div class="brand">
-        <img class="brand-logo" src="../assets/logo.jpg" alt="Club logo">
-        <div>
-          <h1>Patient Dashboard</h1>
-          <p>Request blood quickly, track progress, and wait with clear updates.</p>
-        </div>
-      </div>
-      <div class="top-actions">
-      </div>
-    </div>
-
-    <nav class="nav" aria-label="Dashboard sections">
-      <a class="active" href="#overview">Overview</a>
-      <a href="#create-request">Create Request</a>
-      <a href="#my-requests">My Requests</a>
-      <a href="#assigned-donor">Assigned Donor</a>
-    </nav>
-
     <section class="dashboard-content" id="overview">
       <!-- Patient summary at the top -->
 
@@ -66,24 +54,8 @@
           </p>
           <div class="hero-actions">
             <a class="btn" href="#create-request">Create request</a>
-            <a class="btn secondary" href="#my-requests">Track requests</a>
           </div>
         </article>
-      </div>
-
-      <div class="patient-status-strip">
-        <div class="patient-status">
-          <span>Open requests</span>
-          <strong>03</strong>
-        </div>
-        <div class="patient-status">
-          <span>Donor found</span>
-          <strong>01</strong>
-        </div>
-        <div class="patient-status">
-          <span>Completed</span>
-          <strong>02</strong>
-        </div>
       </div>
 
       <div class="patient-grid">
@@ -151,7 +123,7 @@
           </div>
 
           <div class="request-card-list">
-            <article class="request-record">
+            <article class="request-record" data-request="PR-2041">
               <div class="request-record-top">
                 <span class="request-record-id">Request ID: PR-2041</span>
                 <span class="table-badge pending">Pending</span>
@@ -160,10 +132,12 @@
                 <strong>A+</strong>
                 <span>Created: 27 Apr 2026</span>
                 <span>Hospital: City Hospital ICU</span>
+                <span class="donor-name">Donor: —</span>
+                <span class="donor-phone">Phone: —</span>
               </div>
             </article>
 
-            <article class="request-record">
+            <article class="request-record" data-request="PR-2034">
               <div class="request-record-top">
                 <span class="request-record-id">Request ID: PR-2034</span>
                 <span class="table-badge pending">Assigned</span>
@@ -172,10 +146,12 @@
                 <strong>O+</strong>
                 <span>Created: 25 Apr 2026</span>
                 <span>Hospital: National Medical College</span>
+                <span class="donor-name">Donor: —</span>
+                <span class="donor-phone">Phone: —</span>
               </div>
             </article>
 
-            <article class="request-record">
+            <article class="request-record" data-request="PR-2018">
               <div class="request-record-top">
                 <span class="request-record-id">Request ID: PR-2018</span>
                 <span class="table-badge success">Completed</span>
@@ -184,35 +160,13 @@
                 <strong>B+</strong>
                 <span>Created: 21 Apr 2026</span>
                 <span>Hospital: Community Blood Center</span>
+                <span class="donor-name">Donor: —</span>
+                <span class="donor-phone">Phone: —</span>
               </div>
             </article>
           </div>
         </section>
       </div>
-
-      <section class="patient-card" id="assigned-donor">
-        <div class="panel-header">
-          <div>
-            <h3>Assigned Donor Info</h3>
-            <p>Starts with no donor, then shows donor details after acceptance.</p>
-          </div>
-        </div>
-
-        <div class="assigned-donor">
-          <div class="assigned-card">
-            <strong>No donor assigned yet</strong>
-            <span>Wait here until a donor accepts your request.</span>
-          </div>
-          <div class="assigned-card">
-            <strong>Donor info after acceptance</strong>
-            <span>Donor name, contact number, and donation status will appear here.</span>
-          </div>
-          <div class="assigned-card">
-            <strong>Completed</strong>
-            <span>After the donor info section, the request can move to completed.</span>
-          </div>
-        </div>
-      </section>
     </section>
   </main>
   <footer class="site-footer">
@@ -225,5 +179,51 @@
   </footer>
 
   <script src="js/site-shell.js" defer></script>
+  <script>
+    (() => {
+      const stored = localStorage.getItem('assignedDonors');
+      if (!stored) {
+        return;
+      }
+
+      let assignedDonors = {};
+      try {
+        assignedDonors = JSON.parse(stored);
+      } catch (error) {
+        return;
+      }
+
+      const getBadgeClass = (status) => {
+        if (status === 'Donor Matched' || status === 'Completed') {
+          return 'success';
+        }
+        return 'pending';
+      };
+
+      document.querySelectorAll('.request-record[data-request]').forEach((card) => {
+        const requestId = card.getAttribute('data-request');
+        if (!requestId || !assignedDonors[requestId]) {
+          return;
+        }
+
+        const { donorName, donorPhone, status } = assignedDonors[requestId];
+        const nameEl = card.querySelector('.donor-name');
+        const phoneEl = card.querySelector('.donor-phone');
+        const badge = card.querySelector('.table-badge');
+
+        if (nameEl && donorName) {
+          nameEl.textContent = `Donor: ${donorName}`;
+        }
+        if (phoneEl && donorPhone) {
+          phoneEl.textContent = `Phone: ${donorPhone}`;
+        }
+        if (badge && status) {
+          badge.textContent = status;
+          badge.classList.remove('pending', 'success');
+          badge.classList.add(getBadgeClass(status));
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
