@@ -1,3 +1,13 @@
+<?php
+require_once __DIR__ . '/../backend/session.php';
+if (!isLoggedIn() || !in_array($_SESSION['role'], ['patient','volunteer'])) {
+  header('Location: ../frontend/home.html');
+  exit;
+}
+?>
+<?php
+// Serve the same content as patient_dashboard.html
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,15 +38,7 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <div class="site-nav-user user-menu" aria-label="User menu">
-          <button class="user-trigger" type="button" aria-haspopup="true" aria-expanded="false">
-            <span class="user-circle" aria-hidden="true">P</span>
-          </button>
-          <div class="user-dropdown" role="menu" hidden>
-            <a class="user-dropdown-item" role="menuitem" href="#profile">Profile</a>
-            <a class="user-dropdown-item" role="menuitem" href="../backend/logout.php" id="logoutBtn">Log out</a>
-          </div>
-        </div>
+        <a href="login.html" data-page="login">Login</a>
       </nav>
     </div>
   </header>
@@ -117,73 +119,12 @@
                 <option value="Critical">Critical</option>
               </select>
             </div>
-
-            <div class="field full">
-              <label for="details">Additional details</label>
-              <textarea id="details" name="details" placeholder="Add ward, deadline, or any notes"></textarea>
-            </div>
-
-            <div class="field full">
-              <button class="btn" type="submit">Submit Request</button>
-            </div>
           </form>
-        </section>
-
-        <section class="patient-card" id="my-requests">
-          <div class="panel-header">
-            <div>
-              <h3>My Requests</h3>
-              <p>Track the request from pending to completed.</p>
-            </div>
-          </div>
-
-          <div class="request-card-list">
-            <article class="request-record" data-request="PR-2041">
-              <div class="request-record-top">
-                <span class="request-record-id">Request ID: PR-2041</span>
-                <span class="table-badge pending">Pending</span>
-              </div>
-              <div class="record-meta">
-                <strong>A+</strong>
-                <span>Created: 27 Apr 2026</span>
-                <span>Hospital: City Hospital ICU</span>
-                <span class="donor-name">Donor: —</span>
-                <span class="donor-phone">Phone: —</span>
-              </div>
-            </article>
-
-            <article class="request-record" data-request="PR-2034">
-              <div class="request-record-top">
-                <span class="request-record-id">Request ID: PR-2034</span>
-                <span class="table-badge pending">Assigned</span>
-              </div>
-              <div class="record-meta">
-                <strong>O+</strong>
-                <span>Created: 25 Apr 2026</span>
-                <span>Hospital: National Medical College</span>
-                <span class="donor-name">Donor: —</span>
-                <span class="donor-phone">Phone: —</span>
-              </div>
-            </article>
-
-            <article class="request-record" data-request="PR-2018">
-              <div class="request-record-top">
-                <span class="request-record-id">Request ID: PR-2018</span>
-                <span class="table-badge success">Completed</span>
-              </div>
-              <div class="record-meta">
-                <strong>B+</strong>
-                <span>Created: 21 Apr 2026</span>
-                <span>Hospital: Community Blood Center</span>
-                <span class="donor-name">Donor: —</span>
-                <span class="donor-phone">Phone: —</span>
-              </div>
-            </article>
-          </div>
         </section>
       </div>
     </section>
   </main>
+
   <footer class="site-footer">
     <div class="site-shell-inner">
       <div class="site-brand-copy">
@@ -194,51 +135,5 @@
   </footer>
 
   <script src="js/site-shell.js" defer></script>
-  <script>
-    (() => {
-      const stored = localStorage.getItem('assignedDonors');
-      if (!stored) {
-        return;
-      }
-
-      let assignedDonors = {};
-      try {
-        assignedDonors = JSON.parse(stored);
-      } catch (error) {
-        return;
-      }
-
-      const getBadgeClass = (status) => {
-        if (status === 'Donor Matched' || status === 'Completed') {
-          return 'success';
-        }
-        return 'pending';
-      };
-
-      document.querySelectorAll('.request-record[data-request]').forEach((card) => {
-        const requestId = card.getAttribute('data-request');
-        if (!requestId || !assignedDonors[requestId]) {
-          return;
-        }
-
-        const { donorName, donorPhone, status } = assignedDonors[requestId];
-        const nameEl = card.querySelector('.donor-name');
-        const phoneEl = card.querySelector('.donor-phone');
-        const badge = card.querySelector('.table-badge');
-
-        if (nameEl && donorName) {
-          nameEl.textContent = `Donor: ${donorName}`;
-        }
-        if (phoneEl && donorPhone) {
-          phoneEl.textContent = `Phone: ${donorPhone}`;
-        }
-        if (badge && status) {
-          badge.textContent = status;
-          badge.classList.remove('pending', 'success');
-          badge.classList.add(getBadgeClass(status));
-        }
-      });
-    })();
-  </script>
 </body>
 </html>

@@ -1,12 +1,15 @@
 <?php
-declare(strict_types=1);
+// Database config
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'clubDB');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
-return [
-    'server' => 'TAMALPC\\SQLEXPRESS',
-    'database' => 'clubDB',
-    'username' => 'CHANGE_ME',
-    'password' => 'CHANGE_ME',
-    'options' => [
-        'CharacterSet' => 'UTF-8'
-    ]
-];
+// Auth / cookie settings
+define('REMEMBER_COOKIE_NAME', 'dream_remember');
+define('REMEMBER_COOKIE_EXPIRE', 30 * 24 * 60 * 60); // 30 days
+
+// Other settings
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_strict_mode', 1);
+?>

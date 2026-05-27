@@ -58,6 +58,51 @@
       }
     }
 
+    // Ensure profile + sign out links when logged in, remove Login link
+    const nav = document.querySelector('.site-nav');
+    if (nav) {
+      const loginLink = nav.querySelector('a[data-page="login"]');
+      if (isLoggedIn) {
+        if (loginLink) loginLink.remove();
+
+        // add profile link if missing
+        if (!nav.querySelector('.profile-link')) {
+          const profileHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
+                              (currentRole === 'patient') ? 'patient_dashboard.php' :
+                              (currentRole === 'admin') ? 'admin_dashboard.php' :
+                              (currentRole === 'volunteer') ? 'volunteer_dashboard.php' : 'home.html';
+          const a = document.createElement('a');
+          a.href = profileHref;
+          a.className = 'profile-link';
+          // Add data-page so the shell can mark it active
+          a.dataset.page = currentRole;
+          a.textContent = 'Profile';
+          nav.appendChild(a);
+        }
+
+        // add sign out link if missing
+        if (!nav.querySelector('#logoutBtn')) {
+          const out = document.createElement('a');
+          out.href = '../backend/logout.php';
+          out.id = 'logoutBtn';
+          out.textContent = 'Sign out';
+          nav.appendChild(out);
+        }
+      } else {
+        // not logged in: ensure login link is present
+        if (!loginLink) {
+          const a = document.createElement('a');
+          a.href = 'login.html';
+          a.dataset.page = 'login';
+          a.textContent = 'Login';
+          nav.appendChild(a);
+        }
+        // remove profile/signout if present
+        const pl = nav.querySelector('.profile-link'); if (pl) pl.remove();
+        const out = nav.querySelector('#logoutBtn'); if (out) out.remove();
+      }
+    }
+
     const currentPage = document.body.dataset.page;
     document.querySelectorAll('.site-nav a[data-page]').forEach((link) => {
       if (currentPage && link.dataset.page === currentPage) {

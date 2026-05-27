@@ -199,6 +199,10 @@ a {
   margin-bottom: 20px;
 }
 
+body[data-page="donor"] .hero-grid.donor-hero-grid {
+  grid-template-columns: 1fr;
+}
+
 .admin-hero-grid {
   grid-template-columns: 1fr;
 }
@@ -303,6 +307,10 @@ a {
   margin-bottom: 20px;
 }
 
+body[data-page="donor"] .stats-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .stats-grid.stats-quad {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -334,6 +342,10 @@ a {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 20px;
+}
+
+body[data-page="donor"] .panels-grid {
+  grid-template-columns: 1fr;
 }
 
 .panel,

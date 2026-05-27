@@ -1,25 +1,15 @@
-CREATE TABLE dbo.users (
-    id INT IDENTITY(1, 1) PRIMARY KEY,
-    full_name NVARCHAR(150) NOT NULL,
-    email NVARCHAR(150) NOT NULL UNIQUE,
-    role NVARCHAR(20) NOT NULL,
-    password_hash NVARCHAR(255) NOT NULL,
-    created_at DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
-);
+-- SQL schema for users table (based on registration form fields)
+CREATE TABLE IF NOT EXISTS `users` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT,
+	`name` VARCHAR(100) NOT NULL,
+	`email` VARCHAR(100) UNIQUE NOT NULL,
+	`password` VARCHAR(255) NOT NULL,
+	`role` ENUM('donor','patient','volunteer','admin') DEFAULT 'patient',
+	`blood_group` VARCHAR(5) DEFAULT NULL,
+	`phone` VARCHAR(20) DEFAULT NULL,
+	`availability_status` ENUM('Available','Unavailable') DEFAULT 'Available',
+	`status` ENUM('Active','Blocked') DEFAULT 'Active',
+	`remember_token` VARCHAR(255) DEFAULT NULL,
+	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE dbo.requests (
-    id INT IDENTITY(1, 1) PRIMARY KEY,
-    request_code NVARCHAR(20) NULL,
-    patient_name NVARCHAR(150) NOT NULL,
-    blood_group NVARCHAR(10) NOT NULL,
-    hospital NVARCHAR(150) NOT NULL,
-    location NVARCHAR(150) NULL,
-    contact_number NVARCHAR(30) NOT NULL,
-    units_needed INT NOT NULL,
-    urgency_level NVARCHAR(20) NOT NULL,
-    details NVARCHAR(500) NULL,
-    status NVARCHAR(20) NOT NULL DEFAULT 'Pending',
-    created_by_user_id INT NULL,
-    created_at DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_requests_users FOREIGN KEY (created_by_user_id) REFERENCES dbo.users(id)
-);

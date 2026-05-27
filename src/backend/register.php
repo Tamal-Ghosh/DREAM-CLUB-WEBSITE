@@ -1,78 +1,54 @@
 <?php
-declare(strict_types=1);
-
-session_start();
-
-$redirectBase = '../frontend';
+require_once __DIR__ . '/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: {$redirectBase}/register.html");
-    exit;
+    http_response_code(405);
+    exit('Method not allowed');
 }
 
-$firstName = trim($_POST['firstName'] ?? '');
-$lastName = trim($_POST['lastName'] ?? '');
+$first = trim($_POST['firstName'] ?? '');
+$last = trim($_POST['lastName'] ?? '');
 $email = trim($_POST['email'] ?? '');
-$role = trim($_POST['role'] ?? '');
+$role = $_POST['role'] ?? 'donor';
+$bloodGroup = $_POST['bloodGroup'] ?? null;
+$phone = $_POST['phone'] ?? null;
 $password = $_POST['password'] ?? '';
-$confirmPassword = $_POST['confirmPassword'] ?? '';
+$confirm = $_POST['confirmPassword'] ?? '';
 
-if ($firstName === '' || $lastName === '' || $email === '' || $role === '' || $password === '' || $confirmPassword === '') {
-    header("Location: {$redirectBase}/register.html?error=missing");
+if (!$first || !$last || !$email || !$password) {
+    header('Location: ../frontend/register.html?error=missing');
     exit;
 }
 
-if ($password !== $confirmPassword) {
-    header("Location: {$redirectBase}/register.html?error=nomatch");
+if ($password !== $confirm) {
+    header('Location: ../frontend/register.html?error=password_mismatch');
     exit;
 }
 
-$allowedRoles = ['donor', 'patient'];
-if (!in_array($role, $allowedRoles, true)) {
-    header("Location: {$redirectBase}/register.html?error=role");
-    exit;
+if (!in_array($role, ['donor', 'patient'])) {
+    $role = 'patient';
 }
 
+$name = $first . ' ' . $last;
+
+$pdo = getPDO();
 try {
-    require __DIR__ . '/db.php';
-} catch (Throwable $error) {
-    header("Location: {$redirectBase}/register.html?error=db");
+    // check existing email
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        header('Location: ../frontend/register.html?error=exists');
+        exit;
+    }
+
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $insert = $pdo->prepare('INSERT INTO users (name, email, password, role, blood_group, phone) VALUES (?, ?, ?, ?, ?, ?)');
+    $insert->execute([$name, $email, $passwordHash, $role, $bloodGroup, $phone]);
+
+    header('Location: ../frontend/login.html?registered=1');
+    exit;
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    header('Location: ../frontend/register.html?error=server');
     exit;
 }
-
-$checkSql = 'SELECT id FROM dbo.users WHERE email = ?';
-$checkStmt = sqlsrv_prepare($connection, $checkSql, [$email]);
-
-if (!$checkStmt || !sqlsrv_execute($checkStmt)) {
-    header("Location: {$redirectBase}/register.html?error=db");
-    exit;
-}
-
-if (sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
-    header("Location: {$redirectBase}/register.html?error=exists");
-    exit;
-}
-
-$name = trim("{$firstName} {$lastName}");
-$hash = password_hash($password, PASSWORD_DEFAULT);
-
-$insertSql = 'INSERT INTO dbo.users (full_name, email, role, password_hash) OUTPUT INSERTED.id VALUES (?, ?, ?, ?)';
-$insertStmt = sqlsrv_prepare($connection, $insertSql, [$name, $email, $role, $hash]);
-
-if (!$insertStmt || !sqlsrv_execute($insertStmt)) {
-    header("Location: {$redirectBase}/register.html?error=db");
-    exit;
-}
-
-$inserted = sqlsrv_fetch_array($insertStmt, SQLSRV_FETCH_ASSOC);
-
-$_SESSION['userId'] = (int) ($inserted['id'] ?? 0);
-$_SESSION['role'] = $role;
-$_SESSION['name'] = $name;
-
-$target = $role === 'patient'
-    ? "{$redirectBase}/patient_dashboard.html"
-    : "{$redirectBase}/donor_dashboard.html";
-
-header("Location: {$target}");
-exit;

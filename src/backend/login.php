@@ -1,62 +1,84 @@
 <?php
-declare(strict_types=1);
-
-session_start();
-
-$redirectBase = '../frontend';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: {$redirectBase}/login.html");
-    exit;
+    http_response_code(405);
+    exit('Method not allowed');
 }
 
 $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
+$remember = !empty($_POST['remember']);
 
-if ($email === '' || $password === '') {
-    header("Location: {$redirectBase}/login.html?error=missing");
+if (!$email || !$password) {
+    header('Location: ../frontend/login.html?error=missing');
     exit;
 }
 
-try {
-    require __DIR__ . '/db.php';
-} catch (Throwable $error) {
-    header("Location: {$redirectBase}/login.html?error=db");
+$pdo = getPDO();
+$stmt = $pdo->prepare('SELECT id, name, email, password, role, status FROM users WHERE email = ? LIMIT 1');
+$stmt->execute([$email]);
+$user = $stmt->fetch();
+
+if (!$user) {
+    header('Location: ../frontend/login.html?error=invalid');
     exit;
 }
 
-$sql = 'SELECT id, full_name, role, password_hash FROM dbo.users WHERE email = ?';
-$stmt = sqlsrv_prepare($connection, $sql, [$email]);
-
-if (!$stmt || !sqlsrv_execute($stmt)) {
-    header("Location: {$redirectBase}/login.html?error=db");
+if ($user['status'] !== 'Active') {
+    header('Location: ../frontend/login.html?error=blocked');
     exit;
 }
 
-$matched = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-
-if (!$matched || !password_verify($password, $matched['password_hash'] ?? '')) {
-    header("Location: {$redirectBase}/login.html?error=invalid");
+if (!password_verify($password, $user['password'])) {
+    header('Location: ../frontend/login.html?error=invalid');
     exit;
 }
 
-$_SESSION['userId'] = (int) ($matched['id'] ?? 0);
-$_SESSION['role'] = $matched['role'] ?? 'public';
-$_SESSION['name'] = $matched['full_name'] ?? '';
+// successful login
+if (session_status() === PHP_SESSION_NONE) session_start();
+// regenerate session id to prevent fixation
+session_regenerate_id(true);
+$_SESSION['user_id'] = $user['id'];
+$_SESSION['name'] = $user['name'];
+$_SESSION['email'] = $user['email'];
+$_SESSION['role'] = $user['role'];
 
-$role = $_SESSION['role'];
-$target = "{$redirectBase}/home.html";
-
-$roleMap = [
-    'admin' => "{$redirectBase}/admin_dashboard.html",
-    'donor' => "{$redirectBase}/donor_dashboard.html",
-    'patient' => "{$redirectBase}/patient_dashboard.html",
-    'volunteer' => "{$redirectBase}/volunteer_dashboard.html"
-];
-
-if (isset($roleMap[$role])) {
-    $target = $roleMap[$role];
+// handle remember me
+if ($remember) {
+    $token = bin2hex(random_bytes(32));
+    $tokenHash = hash('sha256', $token);
+    $update = $pdo->prepare('UPDATE users SET remember_token = ? WHERE id = ?');
+    $update->execute([$tokenHash, $user['id']]);
+    // secure cookie options
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+    setcookie(REMEMBER_COOKIE_NAME, $token, [
+        'expires' => time() + REMEMBER_COOKIE_EXPIRE,
+        'path' => '/',
+        'secure' => $secure,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 
-header("Location: {$target}");
+// redirect based on role — use PHP-protected dashboard pages
+switch ($user['role']) {
+    case 'donor':
+        $loc = '../frontend/donor_dashboard.php';
+        break;
+    case 'patient':
+        $loc = '../frontend/patient_dashboard.php';
+        break;
+    case 'volunteer':
+        $loc = '../frontend/volunteer_dashboard.php';
+        break;
+    case 'admin':
+        $loc = '../frontend/admin_dashboard.php';
+        break;
+    default:
+        $loc = '../frontend/home.html';
+}
+
+header('Location: ' . $loc);
 exit;
