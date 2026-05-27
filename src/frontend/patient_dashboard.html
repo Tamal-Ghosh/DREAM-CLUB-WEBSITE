@@ -34,7 +34,7 @@
           </button>
           <div class="user-dropdown" role="menu" hidden>
             <a class="user-dropdown-item" role="menuitem" href="#profile">Profile</a>
-            <a class="user-dropdown-item" role="menuitem" href="login.html" id="logoutBtn">Log out</a>
+            <a class="user-dropdown-item" role="menuitem" href="../backend/logout.php" id="logoutBtn">Log out</a>
           </div>
         </div>
       </nav>
@@ -67,7 +67,17 @@
             </div>
           </div>
 
-          <form class="request-form-grid" action="#" method="post">
+          <form class="request-form-grid" action="../backend/request.php" method="post">
+            <div class="field full">
+              <label for="patientName">Patient name</label>
+              <input id="patientName" name="patientName" type="text" placeholder="Enter patient name" required>
+            </div>
+
+            <div class="field">
+              <label for="contactNumber">Contact number</label>
+              <input id="contactNumber" name="contactNumber" type="tel" placeholder="01XXXXXXXXX" required>
+            </div>
+
             <div class="field">
               <label for="bloodGroup">Blood group needed</label>
               <select id="bloodGroup" name="bloodGroup" required>
@@ -84,8 +94,8 @@
             </div>
 
             <div class="field">
-              <label for="units">Units required</label>
-              <input id="units" name="units" type="number" min="1" placeholder="e.g. 2" required>
+              <label for="unitsNeeded">Units required</label>
+              <input id="unitsNeeded" name="unitsNeeded" type="number" min="1" placeholder="e.g. 2" required>
             </div>
 
             <div class="field full">
@@ -95,17 +105,22 @@
 
             <div class="field full">
               <label for="location">Location</label>
-              <input id="location" name="location" type="text" placeholder="District, thana, area" required>
+              <input id="location" name="location" type="text" placeholder="District, thana, area">
             </div>
 
             <div class="field full">
-              <label for="urgency">Urgency</label>
-              <select id="urgency" name="urgency" required>
+              <label for="urgencyLevel">Urgency</label>
+              <select id="urgencyLevel" name="urgencyLevel" required>
                 <option value="" selected disabled>Select urgency</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="Normal">Normal</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Critical">Critical</option>
               </select>
+            </div>
+
+            <div class="field full">
+              <label for="details">Additional details</label>
+              <textarea id="details" name="details" placeholder="Add ward, deadline, or any notes"></textarea>
             </div>
 
             <div class="field full">

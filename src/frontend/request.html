@@ -26,6 +26,7 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
+        <a href="request.html" data-page="request">Request Blood</a>
         <a href="login.html" data-page="login">Login</a>
       </nav>
     </div>
@@ -39,7 +40,7 @@
     <div class="request-grid">
       <section class="request-card">
         <h2>Request Form</h2>
-        <form class="request-form" action="#" method="post">
+        <form class="request-form" action="../backend/request.php" method="post">
           <div class="request-field">
             <label for="patientName">Patient Name</label>
             <input id="patientName" name="patientName" type="text" placeholder="Enter patient name" required>
@@ -59,8 +60,12 @@
             </select>
           </div>
           <div class="request-field">
-            <label for="hospital">Hospital / Location</label>
-            <input id="hospital" name="hospital" type="text" placeholder="Hospital or address" required>
+            <label for="hospital">Hospital</label>
+            <input id="hospital" name="hospital" type="text" placeholder="Hospital name" required>
+          </div>
+          <div class="request-field">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" placeholder="Area, city, or address">
           </div>
           <div class="request-field">
             <label for="contactNumber">Contact Number</label>

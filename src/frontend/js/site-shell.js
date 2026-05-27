@@ -1,6 +1,28 @@
 (() => {
-  const refreshShell = () => {
-    const currentRole = localStorage.getItem('userRole') || 'public';
+  const loadSession = async () => {
+    try {
+      const response = await fetch('../backend/session.php', {
+        credentials: 'include',
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        return { role: 'public', name: '' };
+      }
+
+      const data = await response.json();
+      return {
+        role: data.role || 'public',
+        name: data.name || ''
+      };
+    } catch (error) {
+      return { role: 'public', name: '' };
+    }
+  };
+
+  const refreshShell = async () => {
+    const session = await loadSession();
+    const currentRole = session.role || 'public';
     const isLoggedIn = currentRole !== 'public';
 
     const navConfig = {
@@ -8,6 +30,8 @@
       about: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       contact: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       team: ['public', 'donor', 'patient', 'volunteer', 'admin'],
+      request: ['public', 'patient', 'volunteer', 'admin'],
+      register: ['public'],
       donor: ['donor', 'volunteer'],
       patient: ['patient', 'volunteer'],
       volunteer: ['volunteer'],
@@ -50,11 +74,14 @@
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn && !logoutBtn.dataset.shellBound) {
       logoutBtn.dataset.shellBound = 'true';
-      logoutBtn.addEventListener('click', (event) => {
+      logoutBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userName');
-        window.location.href = 'login.html';
+        try {
+          await fetch('../backend/logout.php', { credentials: 'include' });
+        } catch (error) {
+          // Ignore logout network failures and force client redirect.
+        }
+        window.location.href = 'home.html';
       });
     }
 
