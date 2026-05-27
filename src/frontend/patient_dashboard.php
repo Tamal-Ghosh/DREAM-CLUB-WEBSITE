@@ -5,135 +5,198 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['patient','volunteer'])) {
   exit;
 }
 ?>
-<?php
-// Serve the same content as patient_dashboard.html
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Dashboard | Dream</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/site-shell.css">
-</head>
-<body data-page="patient">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.html" data-page="login">Login</a>
-      </nav>
-    </div>
-  </header>
-  <main class="dashboard-shell">
-    <section class="dashboard-content" id="overview">
-      <!-- Patient summary at the top -->
+    (function () {
+      const API = '../backend/request.php';
+      const form = document.querySelector('form.request-form-grid');
+      const listWrap = document.querySelector('.request-card-list');
+      const emptyEl = document.querySelector('.empty-state');
 
-      <div class="hero-grid patient-hero-grid">
-        <article class="hero-card">
-          <div class="eyebrow">Patient support</div>
+      const render = (items) => {
+        listWrap.innerHTML = '';
+        if (!items.length) {
+          emptyEl.style.display = '';
+          return;
+        }
 
-          <h2>Make a request and follow every update in one place.</h2>
-          <p>
-            Use the form below to send a blood request, then track the request status until a donor is found and blood is delivered.
-          </p>
-          <div class="hero-actions">
-            <a class="btn" href="#create-request">Create request</a>
-          </div>
-        </article>
-      </div>
+        emptyEl.style.display = 'none';
+        items.forEach((it) => {
+          const status = it.status || 'Pending';
+          const statusClass = (status === 'Completed' || status === 'Donor Assigned') ? 'success' : 'pending';
+          const donorName = it.donor_name || '—';
+          const donorPhone = it.donor_phone || '—';
+          const created = it.created_at ? new Date(it.created_at) : new Date();
 
-      <div class="patient-grid">
-        <section class="patient-card" id="create-request">
-          <div class="panel-header">
-            <div>
-              <h3>Create Blood Request</h3>
-              <p>Fill in the request details and submit it quickly.</p>
+          const article = document.createElement('article');
+          article.className = 'request-record';
+          article.setAttribute('data-request', it.id);
+          article.innerHTML = `
+            <div class="request-card-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div>
+                <span class="request-record-id">Request ID: ${it.id}</span>
+                <div style="margin-top:8px;font-weight:600">${it.patient_name || ''}</div>
+                <div style="margin-top:4px;color:#7b5f58;">Hospital: ${it.hospital || '—'}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.95rem; margin-bottom:6px; font-weight:700;">${it.blood_group || '—'}</div>
+                <div style="font-size:0.85rem; color:#666; margin-bottom:6px;">${created.toLocaleDateString()}</div>
+                <div><span class="table-badge ${statusClass}">${status}</span></div>
+              </div>
             </div>
-          </div>
-
-          <form class="request-form-grid" action="../backend/request.php" method="post">
-            <div class="field full">
-              <label for="patientName">Patient name</label>
-              <input id="patientName" name="patientName" type="text" placeholder="Enter patient name" required>
+            <div class="record-meta" style="margin-top:12px;">
+              <div class="donor-info" style="margin-top:8px;">
+                <strong class="donor-name">Donor: ${donorName}</strong>
+                <div class="donor-phone">Phone: ${donorPhone}</div>
+              </div>
             </div>
+          `;
+          listWrap.appendChild(article);
+        });
+      };
 
-            <div class="field">
-              <label for="contactNumber">Contact number</label>
-              <input id="contactNumber" name="contactNumber" type="tel" placeholder="01XXXXXXXXX" required>
+      const loadRequests = async () => {
+        try {
+          const response = await fetch(`${API}?action=patient-history`, {
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          const data = await response.json();
+          if (data.success) {
+            render(data.requests || []);
+          } else {
+            render([]);
+          }
+        } catch (error) {
+          render([]);
+        }
+      };
+
+      if (form) {
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          formData.append('action', 'create');
+
+          try {
+            const response = await fetch(API, {
+              method: 'POST',
+              credentials: 'include',
+              body: formData
+            });
+            const data = await response.json();
+            if (!data.success) {
+              alert(data.message || 'Unable to submit request');
+              return;
+            }
+
+            form.reset();
+            location.hash = '#my-requests';
+            await loadRequests();
+          } catch (error) {
+            alert('Unable to submit request');
+          }
+        });
+      }
+
+      loadRequests();
+      setInterval(loadRequests, 4000);
+    })();
+                </div>
+              </div>
+              <div class="meta-top-right" style="text-align:right;">
+                <div style="font-size:0.95rem; margin-bottom:6px;">
+                  <strong>${it.bloodGroup || '—'}</strong>
+                </div>
+                <div style="font-size:0.85rem; color:#666; margin-bottom:6px;">${new Date(it.created).toLocaleDateString()}</div>
+                <div><span class="table-badge ${statusClass}">${status}</span></div>
+              </div>
             </div>
-
-            <div class="field">
-              <label for="bloodGroup">Blood group needed</label>
-              <select id="bloodGroup" name="bloodGroup" required>
-                <option value="" selected disabled>Select group</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
+            <div class="record-meta" style="margin-top:12px;">
+              <div>Hospital: ${it.hospital || '—'}</div>
+              <div class="donor-info" style="margin-top:8px;">
+                <strong class="donor-name">Donor: ${donorName}</strong>
+                <div class="donor-phone">Phone: ${donorPhone}</div>
+              </div>
             </div>
+          `;
+          listWrap.appendChild(article);
+        });
+      };
 
-            <div class="field">
-              <label for="unitsNeeded">Units required</label>
-              <input id="unitsNeeded" name="unitsNeeded" type="number" min="1" placeholder="e.g. 2" required>
-            </div>
+      const updateFromAssigned = () => {
+        const assigned = getAssignedMap();
+        document.querySelectorAll('.request-record').forEach((article) => {
+          const id = article.getAttribute('data-request');
+          if (!id) return;
+          const info = assigned[id];
+          if (!info) return;
+          const badge = article.querySelector('.table-badge');
+          const donorNameEl = article.querySelector('.donor-name');
+          const donorPhoneEl = article.querySelector('.donor-phone');
+          if (badge && info.status) {
+            badge.textContent = info.status;
+            badge.classList.remove('pending', 'success');
+            badge.classList.add((info.status === 'Completed' || info.status === 'Donor Assigned') ? 'success' : 'pending');
+          }
+          if (donorNameEl && info.donorName) donorNameEl.textContent = 'Donor: ' + info.donorName;
+          if (donorPhoneEl && info.donorPhone) donorPhoneEl.textContent = 'Phone: ' + info.donorPhone;
+        });
+      };
 
-            <div class="field full">
-              <label for="hospital">Hospital name</label>
-              <input id="hospital" name="hospital" type="text" placeholder="Enter hospital name" required>
-            </div>
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const data = {
+            id: 'PR-' + Date.now().toString().slice(-6),
+            patientName: form.patientName.value || '',
+            contactNumber: form.contactNumber.value || '',
+            bloodGroup: form.bloodGroup.value || '',
+            units: form.unitsNeeded.value || '',
+            hospital: form.hospital.value || '',
+            location: form.location.value || '',
+            urgency: form.urgencyLevel.value || '',
+            details: form.details ? form.details.value : '',
+            status: 'Pending',
+            created: Date.now()
+          };
+          const items = load();
+          items.unshift(data);
+          save(items);
+          render();
+          // scroll to requests
+          location.hash = '#my-requests';
+          form.reset();
+        });
+      }
 
-            <div class="field full">
-              <label for="location">Location</label>
-              <input id="location" name="location" type="text" placeholder="District, thana, area">
-            </div>
+      // initial render
+      render();
 
-            <div class="field full">
-              <label for="urgencyLevel">Urgency</label>
-              <select id="urgencyLevel" name="urgencyLevel" required>
-                <option value="" selected disabled>Select urgency</option>
-                <option value="Normal">Normal</option>
-                <option value="Urgent">Urgent</option>
-                <option value="Critical">Critical</option>
-              </select>
-            </div>
-          </form>
-        </section>
-      </div>
-    </section>
-  </main>
+      // respond to assignedDonors changes from other tabs (real-time-ish)
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'assignedDonors') {
+          updateFromAssigned();
+        }
+        if (event.key === STORAGE_KEY) {
+          render();
+        }
+      });
 
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
+      // polling fallback for same-tab updates (in case other pages write without triggering storage)
+      let lastAssigned = localStorage.getItem('assignedDonors');
+      let lastRequests = localStorage.getItem(STORAGE_KEY);
+      setInterval(() => {
+        const curAssigned = localStorage.getItem('assignedDonors');
+        const curRequests = localStorage.getItem(STORAGE_KEY);
+        if (curAssigned !== lastAssigned) {
+          lastAssigned = curAssigned;
+          updateFromAssigned();
+        }
+        if (curRequests !== lastRequests) {
+          lastRequests = curRequests;
+          render();
+        }
+      }, 1500);
+    })();
+  </script>
 </body>
 </html>

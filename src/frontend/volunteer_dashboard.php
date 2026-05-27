@@ -53,6 +53,39 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
           </div>
         </article>
       </div>
+
+      <div class="dashboard-grid full-width" style="margin-top:24px;">
+        <section class="table-card" id="requests">
+          <div class="panel-header">
+            <div>
+              <h3>Blood Request Management</h3>
+              <p>Assign donors, then use Complete or Failed only after the request reaches Donor Assigned.</p>
+            </div>
+          </div>
+
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient Name</th>
+                  <th>Patient Number</th>
+                  <th>Blood</th>
+                  <th>Units</th>
+                  <th>Hospital</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Donor Name</th>
+                  <th>Donor Phone</th>
+                  <th>Assign Donor</th>
+                  <th>Completed?</th>
+                </tr>
+              </thead>
+              <tbody id="requestTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </section>
   </main>
 
@@ -66,5 +99,126 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
   </footer>
 
   <script src="js/site-shell.js" defer></script>
+  <script>
+    (function () {
+      const API = '../backend/request.php';
+      const tbody = document.getElementById('requestTableBody');
+
+      if (!tbody) return;
+
+      const requestAction = async (action, requestId, extraData = {}) => {
+        const formData = new FormData();
+        formData.append('action', action);
+        formData.append('request_id', requestId);
+        Object.entries(extraData).forEach(([key, value]) => formData.append(key, value));
+
+        const response = await fetch(API, {
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        });
+        return response.json();
+      };
+
+      const render = (requests) => {
+        tbody.innerHTML = '';
+        if (!requests.length) {
+          const row = document.createElement('tr');
+          row.innerHTML = '<td colspan="12" style="text-align:center; padding:18px;">No requests found</td>';
+          tbody.appendChild(row);
+          return;
+        }
+
+        requests.forEach((request) => {
+          const status = request.status || 'Pending';
+          const canComplete = status === 'Donor Assigned';
+          const canAssign = !['Completed', 'Failed', 'Donor Assigned'].includes(status);
+          const row = document.createElement('tr');
+          row.dataset.requestId = request.id;
+          row.innerHTML = `
+            <td>${request.id}</td>
+            <td>${request.patient_name || '—'}</td>
+            <td>${request.contact_number || '—'}</td>
+            <td>${request.blood_group || '—'}</td>
+            <td>${request.units_required || '—'}</td>
+            <td>${request.hospital || '—'}</td>
+            <td>${request.location || '—'}</td>
+            <td><span class="table-badge ${(status === 'Completed' || status === 'Donor Assigned') ? 'success' : 'pending'}">${status}</span></td>
+            <td class="donor-name">${request.donor_name || '—'}</td>
+            <td class="donor-phone">${request.donor_phone || '—'}</td>
+            <td><button class="btn small assign-btn" type="button" ${canAssign ? '' : 'disabled'}>Assign Donor</button></td>
+            <td class="table-actions">
+              <button class="btn small complete-btn" type="button" ${canComplete ? '' : 'disabled'}>Complete</button>
+              <button class="btn small failed-btn" type="button" ${canComplete ? '' : 'disabled'}>Failed</button>
+            </td>
+          `;
+
+          row.querySelector('.assign-btn')?.addEventListener('click', async () => {
+            const donorId = window.prompt('Enter donor user id');
+            if (!donorId) return;
+            const donorName = window.prompt('Enter donor name');
+            if (!donorName) return;
+            const donorPhone = window.prompt('Enter donor phone number') || '';
+
+            try {
+              const data = await requestAction('assign', request.id, {
+                donor_id: donorId,
+                donor_name: donorName,
+                donor_phone: donorPhone
+              });
+              if (!data.success) {
+                alert(data.message || 'Unable to assign request');
+                return;
+              }
+              await refresh();
+            } catch (error) {
+              alert('Unable to assign request');
+            }
+          });
+
+          row.querySelector('.complete-btn')?.addEventListener('click', async () => {
+            try {
+              const data = await requestAction('complete', request.id);
+              if (!data.success) {
+                alert(data.message || 'Unable to complete request');
+                return;
+              }
+              await refresh();
+            } catch (error) {
+              alert('Unable to complete request');
+            }
+          });
+
+          row.querySelector('.failed-btn')?.addEventListener('click', async () => {
+            try {
+              const data = await requestAction('failed', request.id);
+              if (!data.success) {
+                alert(data.message || 'Unable to mark request failed');
+                return;
+              }
+              await refresh();
+            } catch (error) {
+              alert('Unable to mark request failed');
+            }
+          });
+
+          tbody.appendChild(row);
+        });
+      };
+
+      const refresh = async () => {
+        try {
+          const response = await fetch(`${API}?action=management-requests`, { credentials: 'include', cache: 'no-store' });
+          const data = await response.json();
+          render(data.success ? (data.requests || []) : []);
+        } catch (error) {
+          render([]);
+        }
+      };
+
+      refresh();
+      setInterval(refresh, 4000);
+    })();
+  </script>
 </body>
 </html>

@@ -14,6 +14,7 @@ $bloodGroup = $_POST['bloodGroup'] ?? null;
 $phone = $_POST['phone'] ?? null;
 $password = $_POST['password'] ?? '';
 $confirm = $_POST['confirmPassword'] ?? '';
+$next = $_GET['next'] ?? $_POST['next'] ?? '';
 
 if (!$first || !$last || !$email || !$password) {
     header('Location: ../frontend/register.html?error=missing');
@@ -44,6 +45,11 @@ try {
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
     $insert = $pdo->prepare('INSERT INTO users (name, email, password, role, blood_group, phone) VALUES (?, ?, ?, ?, ?, ?)');
     $insert->execute([$name, $email, $passwordHash, $role, $bloodGroup, $phone]);
+
+    if ($next === 'admin') {
+        header('Location: ../frontend/admin_dashboard.php?user_added=1');
+        exit;
+    }
 
     header('Location: ../frontend/login.html?registered=1');
     exit;

@@ -126,5 +126,18 @@
   </footer>
 
   <script src="js/site-shell.js" defer></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('next') !== 'admin') {
+        return;
+      }
+
+      const form = document.querySelector('.form-inner');
+      if (form) {
+        form.action = '../backend/register.php?next=admin';
+      }
+    })();
+  </script>
 </body>
 </html>

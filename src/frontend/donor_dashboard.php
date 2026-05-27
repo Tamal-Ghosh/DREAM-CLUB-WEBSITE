@@ -40,15 +40,6 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
     </div>
   </header>
   <main class="dashboard-shell">
-    <!-- Top bar with logo and quick availability control -->
-
-    <nav class="nav" aria-label="Dashboard sections">
-      <a class="active" href="#overview">Overview</a>
-      <a href="#requests">Requests</a>
-      <a href="#schedule">Schedule</a>
-      <a href="#history">History</a>
-    </nav>
-
     <section class="dashboard-content" id="overview">
       <!-- First thing the donor sees -->
       <div class="hero-grid">
@@ -60,12 +51,12 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
               <strong class="blood-group">A+</strong>
             </div>
             <div>
-              <span class="status-label">Availability</span>
-              <strong class="availability-badge available">Available</strong>
+              <span class="status-label">Last donation</span>
+              <strong id="lastDonationValue"></strong>
             </div>
             <div>
-              <span class="status-label">Last donation</span>
-              <strong>12 Apr 2026</strong>
+              <span class="status-label">Completed donations</span>
+              <strong id="completedDonationsValue">0</strong>
             </div>
           </div>
           <h2>Your blood can help save lives today.</h2>
@@ -78,15 +69,24 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
           </div>
         </article>
 
-        <aside class="side-card">
-          <h3>Donor actions</h3>
-          <p>Fast access to your most important tasks.</p>
-          <ul>
-            <li>Update availability before responding to requests</li>
-            <li>Check your local area for nearby urgent needs</li>
-            <li>Keep contact and location details current</li>
-          </ul>
-        </aside>
+        <section class="side-card" id="requests">
+          <h3>Assigned Requests</h3>
+          <p>Requests assigned by admin or volunteer. Accept a request to update its status.</p>
+
+          <div class="requests-list" aria-live="polite"></div>
+          <p class="requests-empty" style="display:none; color:#7a5959;">No incoming requests</p>
+        </section>
+
+        <!-- Donation history panel remains available under the requests section -->
+        <section class="side-card" id="history">
+          <h3>Donation History</h3>
+          <p>Recent donations and status updates. If there are no records you'll see a message.</p>
+
+          <div class="history-list" aria-live="polite">
+            <!-- history items will be injected here -->
+          </div>
+          <p class="history-empty" style="display:none; color:#7a5959;">No previous history</p>
+        </section>
       </div>
     </section>
   </main>
@@ -101,5 +101,205 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
   </footer>
 
   <script src="js/site-shell.js" defer></script>
+  <script>
+    (function () {
+      const API = '../backend/request.php';
+      const requestList = document.querySelector('.requests-list');
+      const requestsEmptyEl = document.querySelector('.requests-empty');
+      const listWrap = document.querySelector('.history-list');
+      const emptyEl = document.querySelector('.history-empty');
+      const lastDonationValue = document.getElementById('lastDonationValue');
+      const completedDonationsValue = document.getElementById('completedDonationsValue');
+
+      const formatDate = (value) => {
+        if (!value) return '—';
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString();
+      };
+
+      const renderRequests = (requests) => {
+        const entries = requests.filter((item) => (item.status || 'Pending') === 'Donor Review');
+        requestList.innerHTML = '';
+
+        if (!entries.length) {
+          requestsEmptyEl.style.display = '';
+          return;
+        }
+
+        requestsEmptyEl.style.display = 'none';
+        entries.forEach((info) => {
+          const requestId = info.id;
+          const status = info.status || 'Pending';
+          const statusClass = (status === 'Donor Assigned' || status === 'Completed') ? 'success' : 'pending';
+          const item = document.createElement('article');
+          item.className = 'request-item';
+          item.style.padding = '12px 10px';
+          item.style.borderBottom = '1px solid rgba(0,0,0,0.06)';
+          item.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div>
+                <div style="font-weight:700; font-size:1rem;">Request ${requestId}</div>
+                <div style="margin-top:6px; color:#6b4c45;">${info.blood_group || '—'} · ${info.hospital || '—'}</div>
+                <div style="margin-top:6px; color:#7b5f58; font-size:0.92rem;">Patient: ${info.patient_name || '—'}</div>
+                <div style="margin-top:4px; color:#7b5f58; font-size:0.92rem;">Location: ${info.location || '—'}</div>
+                <div style="margin-top:4px; color:#7b5f58; font-size:0.92rem;">Units required: ${info.units_required || '—'}</div>
+                <div style="margin-top:4px; color:#7b5f58; font-size:0.92rem;">Contact: ${info.contact_number || '—'}</div>
+              </div>
+              <div style="text-align:right; min-width:120px;">
+                <div><span class="table-badge ${statusClass}">${status}</span></div>
+                <button class="btn small accept-request-btn" type="button" data-request-id="${requestId}" style="margin-top:10px;">Accept</button>
+                <button class="btn small reject-request-btn" type="button" data-request-id="${requestId}" style="margin-top:8px; background:#9f4138;">Reject</button>
+              </div>
+            </div>
+          `;
+
+          const acceptBtn = item.querySelector('.accept-request-btn');
+          const rejectBtn = item.querySelector('.reject-request-btn');
+          if (acceptBtn) {
+            const accepted = status === 'Donor Assigned' || status === 'Completed';
+            if (accepted) {
+              acceptBtn.textContent = 'Donor Assigned';
+              acceptBtn.disabled = true;
+              if (rejectBtn) {
+                rejectBtn.disabled = true;
+              }
+            } else {
+              acceptBtn.addEventListener('click', () => {
+                acceptRequest(requestId);
+              });
+            }
+          }
+
+          if (rejectBtn) {
+            const closed = status === 'Pending' || status === 'Donor Assigned' || status === 'Completed' || status === 'Failed';
+            if (closed) {
+              rejectBtn.textContent = status === 'Failed' ? 'Failed' : 'Rejected';
+              rejectBtn.disabled = true;
+            } else {
+              rejectBtn.addEventListener('click', () => {
+                rejectRequest(requestId);
+              });
+            }
+          }
+
+          requestList.appendChild(item);
+        });
+      };
+
+      const renderHistory = (requests) => {
+        const items = requests.filter((item) => (item.status || 'Pending') === 'Completed');
+        const completedCount = requests.filter((item) => (item.status || 'Pending') === 'Completed').length;
+        if (completedDonationsValue) {
+          completedDonationsValue.textContent = String(completedCount);
+        }
+
+        if (lastDonationValue) {
+          const lastCompleted = requests
+            .filter((item) => (item.status || 'Pending') === 'Completed' && item.created_at)
+            .sort((a, b) => new Date((b.updated_at || b.created_at)) - new Date((a.updated_at || a.created_at)))[0];
+          lastDonationValue.textContent = lastCompleted ? formatDate(lastCompleted.updated_at || lastCompleted.created_at) : '';
+        }
+
+        listWrap.innerHTML = '';
+        if (!items.length) {
+          emptyEl.style.display = '';
+          return;
+        }
+        emptyEl.style.display = 'none';
+        items.forEach((it) => {
+          const el = document.createElement('div');
+          el.className = 'history-item';
+          el.style.padding = '12px 10px';
+          el.style.borderBottom = '1px solid rgba(0,0,0,0.04)';
+          el.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div>
+                <div style="font-weight:700">${it.patient_name || '—'}</div>
+                <div style="font-size:0.9rem;color:#666">${it.blood_group || '—'} · ${it.hospital || ''}</div>
+                <div style="margin-top:4px;color:#666;font-size:0.9rem;">Location: ${it.location || '—'}</div>
+                <div style="margin-top:4px;color:#666;font-size:0.9rem;">Units required: ${it.units_required || '—'}</div>
+                <div style="margin-top:4px;color:#666;font-size:0.9rem;">Contact: ${it.contact_number || '—'}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:0.9rem;color:#666">${formatDate(it.updated_at || it.created_at)}</div>
+                <div style="margin-top:6px"><span class="table-badge success">${it.status}</span></div>
+              </div>
+            </div>
+            <div style="margin-top:8px;color:#444">Donor: ${it.donor_name || '—'} · ${it.donor_phone || '—'}</div>
+          `;
+          listWrap.appendChild(el);
+        });
+      };
+
+      const acceptRequest = async (requestId) => {
+        try {
+          const formData = new FormData();
+          formData.append('action', 'accept');
+          formData.append('request_id', requestId);
+
+          const response = await fetch(API, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+          });
+          const data = await response.json();
+          if (!data.success) {
+            alert(data.message || 'Unable to accept request');
+            return;
+          }
+          await refresh();
+        } catch (error) {
+          alert('Unable to accept request');
+        }
+      };
+
+      const rejectRequest = async (requestId) => {
+        try {
+          const formData = new FormData();
+          formData.append('action', 'reject');
+          formData.append('request_id', requestId);
+
+          const response = await fetch(API, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+          });
+          const data = await response.json();
+          if (!data.success) {
+            alert(data.message || 'Unable to reject request');
+            return;
+          }
+          await refresh();
+        } catch (error) {
+          alert('Unable to reject request');
+        }
+      };
+
+      const refresh = async () => {
+        try {
+          const response = await fetch(`${API}?action=assigned-requests`, {
+            credentials: 'include',
+            cache: 'no-store'
+          });
+          const data = await response.json();
+          if (!data.success) {
+            renderRequests([]);
+            renderHistory([]);
+            return;
+          }
+          const requests = data.requests || [];
+          renderRequests(requests);
+          renderHistory(requests);
+        } catch (error) {
+          renderRequests([]);
+          renderHistory([]);
+        }
+      };
+
+      refresh();
+      setInterval(refresh, 4000);
+
+    })();
+  </script>
 </body>
 </html>
