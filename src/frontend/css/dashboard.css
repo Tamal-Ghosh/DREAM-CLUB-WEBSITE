@@ -171,6 +171,66 @@ a {
   justify-items: center;
 }
 
+/* Profile page: full-width card and read-only view */
+.profile-section {
+  width: 100%;
+  padding: 22px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,247,243,0.94));
+  border: 1px solid rgba(241,194,184,0.9);
+}
+
+.profile-readonly {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-readonly .detail-item {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(241,194,184,0.7);
+}
+
+.profile-readonly .status-label {
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.profile-readonly .value {
+  margin-top: 8px;
+  font-weight: 700;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.profile-role-tag {
+  background: rgba(255,255,255,0.92);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(241,194,184,0.9);
+  font-weight: 800;
+  color: var(--accent-dark);
+}
+
+.profile-form .profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .profile-readonly {
+    grid-template-columns: 1fr;
+  }
+  .profile-form .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .profile-circle {
   width: 72px;
   height: 72px;
@@ -245,7 +305,7 @@ body[data-page="donor"] .hero-grid.donor-hero-grid {
 
 .hero-card h2 {
   font-size: clamp(1.9rem, 3vw, 2.8rem);
-  max-width: 12ch;
+  max-width: none;
   margin-bottom: 12px;
 }
 
@@ -1577,8 +1637,74 @@ dialog.request-edit-dialog::backdrop {
   font-size: 0.86rem;
 }
 
+.profile-section {
+  margin-top: 24px;
+}
+
+.profile-form {
+  display: grid;
+  gap: 18px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.profile-field {
+  display: grid;
+  gap: 8px;
+}
+
+.profile-field label {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-field input,
+.profile-field select {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(197, 115, 97, 0.28);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text);
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.profile-wide {
+  grid-column: 1 / -1;
+}
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.profile-note {
+  margin: 0;
+  color: #6b4c45;
+}
+
+.profile-role-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(204, 74, 36, 0.1);
+  color: var(--accent-dark);
+  font-weight: 800;
+  font-size: 0.86rem;
+}
+
 @media (max-width: 1080px) {
   .patient-grid,
+  .profile-grid,
   .request-form-grid,
   .patient-status-strip {
     grid-template-columns: 1fr;

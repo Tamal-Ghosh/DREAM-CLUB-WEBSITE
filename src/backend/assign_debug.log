@@ -1,18 +1,8 @@
-[2026-05-28T06:54:21+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T06:54:26+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:09:03+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:09:05+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:09:12+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:09:49+02:00] assign attempt: request_id=1 donor_id=3 user_id=4
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:10:44+02:00] assign attempt: request_id=1 donor_id=3 user_id=1
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:10:47+02:00] assign attempt: request_id=1 donor_id=3 user_id=1
-blood group mismatch: donor=A+ request=
-[2026-05-28T07:13:59+02:00] assign attempt: request_id=1 donor_id=3 user_id=1
-assigned ok: donor=3 to request=1
+[2026-05-28T11:45:08+02:00] assign attempt: request_id=2 donor_id=3 user_id=4
+assigned ok: donor=3 to request=2
+[2026-05-28T11:46:57+02:00] assign attempt: request_id=3 donor_id=3 user_id=4
+assigned ok: donor=3 to request=3
+[2026-05-28T11:47:03+02:00] assign attempt: request_id=3 donor_id=3 user_id=4
+assigned ok: donor=3 to request=3
+[2026-05-28T11:51:11+02:00] assign attempt: request_id=3 donor_id=3 user_id=4
+assigned ok: donor=3 to request=3

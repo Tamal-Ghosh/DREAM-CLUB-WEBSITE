@@ -30,6 +30,7 @@
       about: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       contact: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       team: ['public', 'donor', 'patient', 'volunteer', 'admin'],
+      profile: ['donor', 'patient', 'volunteer', 'admin'],
       register: ['public'],
       donor: ['donor', 'volunteer'],
       patient: ['patient', 'volunteer'],
@@ -64,20 +65,29 @@
       if (isLoggedIn) {
         if (loginLink) loginLink.remove();
 
-        // add profile link if missing
-        if (!nav.querySelector('.profile-link')) {
-          const profileHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
+        const dashboardHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
                               (currentRole === 'patient') ? 'patient_dashboard.php' :
                               (currentRole === 'admin') ? 'admin_dashboard.php' :
                               (currentRole === 'volunteer') ? 'volunteer_dashboard.php' : 'home.html';
-          const a = document.createElement('a');
-          a.href = profileHref;
-          a.className = 'profile-link';
-          // Add data-page so the shell can mark it active
-          a.dataset.page = currentRole;
-          a.textContent = 'Dashboard';
-          nav.appendChild(a);
+        let dashboardLink = nav.querySelector('.dashboard-link');
+        if (!dashboardLink) {
+          dashboardLink = document.createElement('a');
+          nav.appendChild(dashboardLink);
         }
+        dashboardLink.href = dashboardHref;
+        dashboardLink.className = 'dashboard-link';
+        dashboardLink.dataset.page = currentRole;
+        dashboardLink.textContent = 'Dashboard';
+
+        let profileLink = nav.querySelector('a[data-page="profile"]');
+        if (!profileLink) {
+          profileLink = document.createElement('a');
+          nav.appendChild(profileLink);
+        }
+        profileLink.href = 'profile.php';
+        profileLink.className = 'profile-link';
+        profileLink.dataset.page = 'profile';
+        profileLink.textContent = 'Profile';
 
         // add sign out link if missing
         if (!nav.querySelector('#logoutBtn')) {
@@ -96,7 +106,8 @@
           a.textContent = 'Login';
           nav.appendChild(a);
         }
-        // remove profile/signout if present
+        // remove dashboard/profile/signout if present
+        const dashboard = nav.querySelector('.dashboard-link'); if (dashboard) dashboard.remove();
         const pl = nav.querySelector('.profile-link'); if (pl) pl.remove();
         const out = nav.querySelector('#logoutBtn'); if (out) out.remove();
       }

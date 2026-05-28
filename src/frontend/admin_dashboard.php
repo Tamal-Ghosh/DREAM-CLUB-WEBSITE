@@ -35,7 +35,8 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="admin_dashboard.php" class="profile-link" data-page="admin">Dashboard</a>
+        <a href="admin_dashboard.php" class="dashboard-link" data-page="admin">Dashboard</a>
+        <a href="profile.php" class="profile-link" data-page="profile">Profile</a>
       </nav>
     </div>
   </header>

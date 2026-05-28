@@ -35,7 +35,8 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="donor_dashboard.php" class="profile-link" data-page="donor">Dashboard</a>
+        <a href="donor_dashboard.php" class="dashboard-link" data-page="donor">Dashboard</a>
+        <a href="profile.php" class="profile-link" data-page="profile">Profile</a>
       </nav>
     </div>
   </header>
@@ -150,7 +151,10 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
               </div>
               <div style="text-align:right; min-width:120px;">
                 <div><span class="table-badge ${statusClass}">${status}</span></div>
-                <button class="btn small accept-request-btn" type="button" data-request-id="${requestId}" style="margin-top:10px;">Accept</button>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+                  <button class="btn small accept-request-btn" type="button" data-request-id="${requestId}">Accept</button>
+                  <button class="btn small secondary reject-request-btn" type="button" data-request-id="${requestId}">Reject</button>
+                </div>
               </div>
             </div>
           `;
@@ -166,6 +170,14 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
                 acceptRequest(requestId);
               });
             }
+          }
+
+          const rejectBtn = item.querySelector('.reject-request-btn');
+          if (rejectBtn) {
+            rejectBtn.addEventListener('click', () => {
+              if (!confirm('Are you sure you want to reject this assignment? This will remove the donor and return the request to Pending.')) return;
+              rejectRequest(requestId);
+            });
           }
 
           requestList.appendChild(item);
@@ -236,6 +248,28 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
           await refresh();
         } catch (error) {
           alert('Unable to accept request');
+        }
+      };
+
+      const rejectRequest = async (requestId) => {
+        try {
+          const formData = new FormData();
+          formData.append('action', 'reject');
+          formData.append('request_id', requestId);
+
+          const response = await fetch(API, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+          });
+          const data = await response.json();
+          if (!data.success) {
+            alert(data.message || 'Unable to reject request');
+            return;
+          }
+          await refresh();
+        } catch (error) {
+          alert('Unable to reject request');
         }
       };
 
