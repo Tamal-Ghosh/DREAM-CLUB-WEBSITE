@@ -35,7 +35,7 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.html" data-page="login">Login</a>
+        <a href="admin_dashboard.php" class="profile-link" data-page="admin">Dashboard</a>
       </nav>
     </div>
   </header>
@@ -95,7 +95,7 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
               <p>Search users, change roles, and toggle status between Active and Blocked.</p>
             </div>
             <div class="panel-actions" style="min-width:260px; flex: 1; display:flex; justify-content:flex-end; gap:10px; align-items:center; flex-wrap:wrap;">
-              <a class="btn small user-action-btn" href="register.html?next=admin" style="min-width:120px; text-align:center;">Add User</a>
+              <a class="btn small user-action-btn" href="register.html?next=admin" style="width:auto; min-width:120px; max-width:180px; text-align:center; flex:0 0 auto;">Add User</a>
               <input id="userSearchInput" class="user-search" type="search" placeholder="Search users" aria-label="Search users" style="width:100%; max-width:320px;">
             </div>
           </div>
@@ -110,7 +110,6 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
                   <th>Number</th>
                   <th>Role</th>
                   <th>Status</th>
-                  <th>Change Role</th>
                   <th>Change Status</th>
                   <th>Edit</th>
                 </tr>
@@ -121,15 +120,13 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
         </section>
       </div>
 
-      <div id="editUserModal" class="edit-user-modal" hidden>
-        <div class="edit-user-modal-backdrop" data-close-edit-modal></div>
+      <dialog id="editUserModal" class="edit-user-modal">
         <div class="edit-user-modal-panel" role="dialog" aria-modal="true" aria-labelledby="editUserTitle">
           <div class="panel-header">
             <div>
               <h3 id="editUserTitle">Edit User</h3>
-              <p>Update any user information, including password if needed.</p>
+              <p>Update user information and settings.</p>
             </div>
-            <button type="button" class="btn small user-action-btn" data-close-edit-modal>Close</button>
           </div>
 
           <div class="edit-user-grid">
@@ -145,10 +142,6 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
             <div class="field-block">
               <label for="editUserPhone">Phone number</label>
               <input id="editUserPhone" class="assign-input" type="text" placeholder="Phone number">
-            </div>
-            <div class="field-block">
-              <label for="editUserPassword">Password</label>
-              <input id="editUserPassword" class="assign-input" type="password" placeholder="Leave blank to keep current password">
             </div>
             <div class="field-block">
               <label for="editUserRole">Role</label>
@@ -180,10 +173,33 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
           </div>
 
           <div class="edit-user-actions">
+            <button type="button" class="btn small user-action-btn" data-close-edit-modal>Cancel</button>
             <button id="saveEditUserBtn" class="btn small user-action-btn" type="button">Save Changes</button>
           </div>
         </div>
-      </div>
+      </dialog>
+
+      <dialog id="donorPickerModal" class="donor-picker-modal">
+        <div class="donor-picker-panel" role="dialog" aria-modal="true" aria-labelledby="donorPickerTitle">
+          <div class="panel-header">
+            <div>
+              <h3 id="donorPickerTitle">Select Matching Donor</h3>
+              <p>Choose a donor whose blood group matches the patient request.</p>
+            </div>
+          </div>
+
+          <div class="donor-picker-summary">
+            <strong id="donorPickerBloodGroup">Blood group: -</strong>
+            <span id="donorPickerRequestMeta">No request selected</span>
+          </div>
+
+          <div id="donorPickerList" class="donor-picker-list"></div>
+
+          <div class="donor-picker-actions">
+            <button type="button" class="btn small user-action-btn" data-close-donor-picker>Close</button>
+          </div>
+        </div>
+      </dialog>
     </section>
   </main>
 
@@ -201,8 +217,14 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
     (function () {
       const API = '../backend/request.php';
       const tbody = document.getElementById('requestTableBody');
+      const donorPickerModal = document.getElementById('donorPickerModal');
+      const donorPickerList = document.getElementById('donorPickerList');
+      const donorPickerBloodGroup = document.getElementById('donorPickerBloodGroup');
+      const donorPickerRequestMeta = document.getElementById('donorPickerRequestMeta');
 
-      if (!tbody) {
+      let activeDonorRequest = null;
+
+      if (!tbody || !donorPickerModal || !donorPickerList || !donorPickerBloodGroup || !donorPickerRequestMeta) {
         return;
       }
 
@@ -217,8 +239,96 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
           credentials: 'include',
           body: formData
         });
-        return response.json();
+
+        try {
+          const data = await response.json();
+          console.log('requestAction response', action, data);
+          return data;
+        } catch (err) {
+          const text = await response.text();
+          console.error('requestAction non-JSON response', response.status, text);
+          return { success: false, message: text || `HTTP ${response.status}` };
+        }
       };
+
+      const closeDonorPicker = () => {
+        activeDonorRequest = null;
+        if (donorPickerModal.open) {
+          donorPickerModal.close();
+        }
+      };
+
+      const renderDonorPicker = (request, donors) => {
+        donorPickerBloodGroup.textContent = `Blood group: ${request.blood_group || '-'}`;
+        donorPickerRequestMeta.textContent = `Patient: ${request.patient_name || '—'} | Hospital: ${request.hospital || '—'} | Location: ${request.location || '—'}`;
+
+        if (!donors.length) {
+          donorPickerList.innerHTML = '<div class="donor-picker-empty">No matching donors found.</div>';
+          return;
+        }
+
+        donorPickerList.innerHTML = donors.map((donor) => `
+          <div class="donor-picker-item">
+            <div class="donor-picker-donor">
+              <strong>${donor.name || '—'}</strong>
+              <span>Name: ${donor.name || '—'} | ID: ${donor.id} | Phone: ${donor.phone || '—'} | Blood group: ${donor.blood_group || '—'}</span>
+            </div>
+            <button class="btn small user-action-btn donor-select-btn" type="button" data-donor-id="${donor.id}">Select</button>
+          </div>
+        `).join('');
+
+        donorPickerList.querySelectorAll('.donor-select-btn').forEach((button) => {
+          button.addEventListener('click', async () => {
+            if (!activeDonorRequest) return;
+
+            try {
+              const donorId = button.getAttribute('data-donor-id');
+              const data = await requestAction('assign', activeDonorRequest.id, { donor_id: donorId });
+              if (!data.success) {
+                alert(data.message || 'Unable to assign request');
+                return;
+              }
+              closeDonorPicker();
+              await refresh();
+            } catch (error) {
+              alert('Unable to assign request');
+            }
+          });
+        });
+      };
+
+      const openDonorPicker = async (request) => {
+        activeDonorRequest = request;
+        donorPickerBloodGroup.textContent = `Blood group: ${request.blood_group || '-'}`;
+        donorPickerRequestMeta.textContent = `Loading matching donors for ${request.patient_name || 'this request'}...`;
+        donorPickerList.innerHTML = '<div class="donor-picker-empty">Loading matching donors...</div>';
+
+        if (!donorPickerModal.open) {
+          donorPickerModal.showModal();
+        }
+
+        try {
+          const response = await fetch(`${API}?action=matched-donors&request_id=${request.id}`, { credentials: 'include', cache: 'no-store' });
+          const data = await response.json();
+          if (!data.success) {
+            donorPickerList.innerHTML = `<div class="donor-picker-empty">${data.message || 'Unable to load donors'}</div>`;
+            return;
+          }
+          renderDonorPicker(data.request || request, data.donors || []);
+        } catch (error) {
+          donorPickerList.innerHTML = '<div class="donor-picker-empty">Unable to load donors.</div>';
+        }
+      };
+
+      donorPickerModal.querySelectorAll('[data-close-donor-picker]').forEach((element) => {
+        element.addEventListener('click', closeDonorPicker);
+      });
+
+      donorPickerModal.addEventListener('click', (event) => {
+        if (event.target === donorPickerModal) {
+          closeDonorPicker();
+        }
+      });
 
       const render = (requests) => {
         tbody.innerHTML = '';
@@ -231,8 +341,15 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
 
         requests.forEach((request) => {
           const status = request.status || 'Pending';
-          const canComplete = status === 'Donor Assigned';
           const canAssign = !['Completed', 'Failed', 'Donor Assigned'].includes(status);
+          const actionCell = status === 'Completed'
+            ? '<span class="table-badge success">Completed</span>'
+            : status === 'Failed'
+              ? '<span class="table-badge pending">Failed</span>'
+              : `
+                <button class="btn small complete-btn" type="button">Complete</button>
+                <button class="btn small failed-btn" type="button">Failed</button>
+              `;
           const row = document.createElement('tr');
           row.dataset.requestId = request.id;
           row.innerHTML = `
@@ -247,33 +364,11 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
             <td class="donor-name">${request.donor_name || '—'}</td>
             <td class="donor-phone">${request.donor_phone || '—'}</td>
             <td><button class="btn small assign-btn" type="button" ${canAssign ? '' : 'disabled'}>Assign Donor</button></td>
-            <td class="table-actions">
-              <button class="btn small complete-btn" type="button" ${canComplete ? '' : 'disabled'}>Complete</button>
-              <button class="btn small failed-btn" type="button" ${canComplete ? '' : 'disabled'}>Failed</button>
-            </td>
+            <td class="table-actions">${actionCell}</td>
           `;
 
           row.querySelector('.assign-btn')?.addEventListener('click', async () => {
-            const donorId = window.prompt('Enter donor user id');
-            if (!donorId) return;
-            const donorName = window.prompt('Enter donor name');
-            if (!donorName) return;
-            const donorPhone = window.prompt('Enter donor phone number') || '';
-
-            try {
-              const data = await requestAction('assign', request.id, {
-                donor_id: donorId,
-                donor_name: donorName,
-                donor_phone: donorPhone
-              });
-              if (!data.success) {
-                alert(data.message || 'Unable to assign request');
-                return;
-              }
-              await refresh();
-            } catch (error) {
-              alert('Unable to assign request');
-            }
+            await openDonorPicker(request);
           });
 
           row.querySelector('.complete-btn')?.addEventListener('click', async () => {
@@ -330,20 +425,17 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
       const editUserName = document.getElementById('editUserName');
       const editUserEmail = document.getElementById('editUserEmail');
       const editUserPhone = document.getElementById('editUserPhone');
-      const editUserPassword = document.getElementById('editUserPassword');
       const editUserRole = document.getElementById('editUserRole');
       const editUserBloodGroup = document.getElementById('editUserBloodGroup');
       const editUserAvailability = document.getElementById('editUserAvailability');
       const editUserStatus = document.getElementById('editUserStatus');
       const saveEditUserBtn = document.getElementById('saveEditUserBtn');
 
-      if (!tbody || !searchInput || !editUserModal || !editUserId || !editUserName || !editUserEmail || !editUserPhone || !editUserPassword || !editUserRole || !editUserBloodGroup || !editUserAvailability || !editUserStatus || !saveEditUserBtn) {
+      if (!tbody || !searchInput || !editUserModal || !editUserId || !editUserName || !editUserEmail || !editUserPhone || !editUserRole || !editUserBloodGroup || !editUserAvailability || !editUserStatus || !saveEditUserBtn) {
         return;
       }
 
       let users = [];
-
-      const roleOptions = ['donor', 'patient', 'volunteer', 'admin'];
 
       const requestAction = async (action, payload = {}) => {
         const formData = new FormData();
@@ -362,7 +454,7 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
         tbody.innerHTML = '';
         if (!items.length) {
           const row = document.createElement('tr');
-          row.innerHTML = '<td colspan="9" style="text-align:center; padding:18px;">No users found</td>';
+          row.innerHTML = '<td colspan="8" style="text-align:center; padding:18px;">No users found</td>';
           tbody.appendChild(row);
           return;
         }
@@ -379,33 +471,11 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
             <td>${user.name || '—'}</td>
             <td>${user.email || '—'}</td>
             <td>${user.phone || '—'}</td>
-            <td>
-              <select class="role-select user-role-select" aria-label="Change role for ${user.name || user.id}">
-                ${roleOptions.map((role) => `<option value="${role}" ${role === user.role ? 'selected' : ''}>${role}</option>`).join('')}
-              </select>
-            </td>
+            <td>${user.role || '—'}</td>
             <td><span class="table-badge ${statusLabel === 'Active' ? 'success' : 'pending'}">${statusLabel}</span></td>
-            <td><button class="btn small role-save-btn user-action-btn" type="button">Save Role</button></td>
             <td><button class="btn small status-toggle-btn user-status-btn" type="button">${nextStatus}</button></td>
             <td><button class="btn small edit-user-btn user-action-btn" type="button">Edit</button></td>
           `;
-
-          row.querySelector('.role-save-btn')?.addEventListener('click', async () => {
-            const selectedRole = row.querySelector('.role-select')?.value;
-            try {
-              const data = await requestAction('update-role', {
-                user_id: user.id,
-                role: selectedRole
-              });
-              if (!data.success) {
-                alert(data.message || 'Unable to update role');
-                return;
-              }
-              await refreshUsers();
-            } catch (error) {
-              alert('Unable to update role');
-            }
-          });
 
           row.querySelector('.status-toggle-btn')?.addEventListener('click', async () => {
             try {
@@ -428,12 +498,13 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
             editUserName.value = user.name || '';
             editUserEmail.value = user.email || '';
             editUserPhone.value = user.phone || '';
-            editUserPassword.value = '';
             editUserRole.value = user.role || 'patient';
             editUserBloodGroup.value = user.blood_group || '';
             editUserAvailability.value = user.availability_status || 'Available';
             editUserStatus.value = user.status || 'Active';
-            editUserModal.hidden = false;
+            if (!editUserModal.open) {
+              editUserModal.showModal();
+            }
           });
 
           tbody.appendChild(row);
@@ -441,12 +512,19 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
       };
 
       const closeEditModal = () => {
-        editUserModal.hidden = true;
-        editUserPassword.value = '';
+        if (editUserModal.open) {
+          editUserModal.close();
+        }
       };
 
       editUserModal.querySelectorAll('[data-close-edit-modal]').forEach((element) => {
         element.addEventListener('click', closeEditModal);
+      });
+
+      editUserModal.addEventListener('click', (event) => {
+        if (event.target === editUserModal) {
+          closeEditModal();
+        }
       });
 
       saveEditUserBtn.addEventListener('click', async () => {
@@ -456,7 +534,6 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
             name: editUserName.value,
             email: editUserEmail.value,
             phone: editUserPhone.value,
-            password: editUserPassword.value,
             role: editUserRole.value,
             blood_group: editUserBloodGroup.value,
             availability_status: editUserAvailability.value,
@@ -478,7 +555,7 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'admin') {
       const applyFilter = () => {
         const query = searchInput.value.trim().toLowerCase();
         const filtered = !query ? users : users.filter((user) =>
-          `${user.name || ''} ${user.email || ''} ${user.role || ''} ${user.status || ''}`.toLowerCase().includes(query)
+          `${user.name || ''} ${user.email || ''} ${user.phone || ''} ${user.role || ''} ${user.status || ''}`.toLowerCase().includes(query)
         );
         render(filtered);
       };

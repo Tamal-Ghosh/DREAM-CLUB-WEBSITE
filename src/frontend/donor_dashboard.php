@@ -35,7 +35,7 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.html" data-page="login">Login</a>
+        <a href="donor_dashboard.php" class="profile-link" data-page="donor">Dashboard</a>
       </nav>
     </div>
   </header>
@@ -118,7 +118,10 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
       };
 
       const renderRequests = (requests) => {
-        const entries = requests.filter((item) => (item.status || 'Pending') === 'Donor Review');
+        const entries = requests.filter((item) => {
+          const status = item.status || 'Pending';
+          return status === 'Donor Review' || status === 'Donor Assigned';
+        });
         requestList.innerHTML = '';
 
         if (!entries.length) {
@@ -148,36 +151,19 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
               <div style="text-align:right; min-width:120px;">
                 <div><span class="table-badge ${statusClass}">${status}</span></div>
                 <button class="btn small accept-request-btn" type="button" data-request-id="${requestId}" style="margin-top:10px;">Accept</button>
-                <button class="btn small reject-request-btn" type="button" data-request-id="${requestId}" style="margin-top:8px; background:#9f4138;">Reject</button>
               </div>
             </div>
           `;
 
           const acceptBtn = item.querySelector('.accept-request-btn');
-          const rejectBtn = item.querySelector('.reject-request-btn');
           if (acceptBtn) {
             const accepted = status === 'Donor Assigned' || status === 'Completed';
             if (accepted) {
-              acceptBtn.textContent = 'Donor Assigned';
+              acceptBtn.textContent = 'Accepted';
               acceptBtn.disabled = true;
-              if (rejectBtn) {
-                rejectBtn.disabled = true;
-              }
             } else {
               acceptBtn.addEventListener('click', () => {
                 acceptRequest(requestId);
-              });
-            }
-          }
-
-          if (rejectBtn) {
-            const closed = status === 'Pending' || status === 'Donor Assigned' || status === 'Completed' || status === 'Failed';
-            if (closed) {
-              rejectBtn.textContent = status === 'Failed' ? 'Failed' : 'Rejected';
-              rejectBtn.disabled = true;
-            } else {
-              rejectBtn.addEventListener('click', () => {
-                rejectRequest(requestId);
               });
             }
           }
@@ -250,28 +236,6 @@ if (!isLoggedIn() || !in_array($_SESSION['role'], ['donor','volunteer'])) {
           await refresh();
         } catch (error) {
           alert('Unable to accept request');
-        }
-      };
-
-      const rejectRequest = async (requestId) => {
-        try {
-          const formData = new FormData();
-          formData.append('action', 'reject');
-          formData.append('request_id', requestId);
-
-          const response = await fetch(API, {
-            method: 'POST',
-            credentials: 'include',
-            body: formData
-          });
-          const data = await response.json();
-          if (!data.success) {
-            alert(data.message || 'Unable to reject request');
-            return;
-          }
-          await refresh();
-        } catch (error) {
-          alert('Unable to reject request');
         }
       };
 

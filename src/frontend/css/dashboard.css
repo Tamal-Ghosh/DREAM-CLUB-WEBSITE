@@ -488,23 +488,33 @@ body[data-page="donor"] .panels-grid {
 .edit-user-modal {
   position: fixed;
   inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  padding: 24px 16px;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
 }
 
-.edit-user-modal-backdrop {
-  position: absolute;
-  inset: 0;
+.edit-user-modal:not([open]) {
+  display: none;
+}
+
+.edit-user-modal[open] {
+  display: grid;
+  place-items: center;
+}
+
+.edit-user-modal::backdrop {
   background: rgba(36, 16, 13, 0.58);
   backdrop-filter: blur(12px);
 }
 
 .edit-user-modal-panel {
   position: relative;
-  z-index: 1;
-  width: min(680px, calc(100vw - 24px));
   max-height: calc(100vh - 48px);
   overflow: auto;
   padding: 20px;
@@ -539,12 +549,104 @@ body[data-page="donor"] .panels-grid {
   margin-top: 18px;
 }
 
+.donor-picker-modal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.donor-picker-modal:not([open]) {
+  display: none;
+}
+
+.donor-picker-modal[open] {
+  display: grid;
+  place-items: center;
+}
+
+.donor-picker-modal::backdrop {
+  background: rgba(36, 16, 13, 0.58);
+  backdrop-filter: blur(12px);
+}
+
+.donor-picker-panel {
+  width: min(760px, calc(100vw - 24px));
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(241, 194, 184, 0.95);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 247, 243, 0.96));
+  box-shadow: 0 30px 70px rgba(36, 16, 13, 0.36);
+}
+
+.donor-picker-summary {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.donor-picker-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.donor-picker-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(241, 194, 184, 0.85);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.donor-picker-donor {
+  display: grid;
+  gap: 4px;
+}
+
+.donor-picker-donor strong {
+  font-size: 1rem;
+}
+
+.donor-picker-donor span {
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.donor-picker-empty {
+  padding: 18px;
+  text-align: center;
+  color: var(--muted);
+  border-radius: 16px;
+  border: 1px dashed rgba(241, 194, 184, 0.95);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.donor-picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
 @media (max-width: 820px) {
-  .edit-user-modal-panel {
-    width: min(560px, calc(100vw - 24px));
+  .edit-user-grid {
+    grid-template-columns: 1fr;
   }
 
-  .edit-user-grid {
+  .donor-picker-item {
     grid-template-columns: 1fr;
   }
 }
@@ -810,6 +912,41 @@ body[data-page="donor"] .panels-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+dialog.request-edit-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+dialog.request-edit-dialog:not([open]) {
+  display: none;
+}
+
+dialog.request-edit-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+dialog.request-edit-dialog::backdrop {
+  background: rgba(36, 16, 13, 0.58);
+  backdrop-filter: blur(12px);
+}
+
+.request-edit-dialog-panel {
+  position: relative;
+  width: min(760px, calc(100vw - 24px));
+  max-height: calc(100vh - 48px);
+  overflow: auto;
 }
 
 .nearby-list {

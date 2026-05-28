@@ -35,7 +35,7 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.html" data-page="login">Login</a>
+        <a href="volunteer_dashboard.php" class="profile-link" data-page="volunteer">Dashboard</a>
       </nav>
     </div>
   </header>
@@ -86,6 +86,28 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
           </div>
         </section>
       </div>
+
+      <dialog id="donorPickerModal" class="donor-picker-modal">
+        <div class="donor-picker-panel" role="dialog" aria-modal="true" aria-labelledby="donorPickerTitle">
+          <div class="panel-header">
+            <div>
+              <h3 id="donorPickerTitle">Select Matching Donor</h3>
+              <p>Choose a donor whose blood group matches the patient request.</p>
+            </div>
+          </div>
+
+          <div class="donor-picker-summary">
+            <strong id="donorPickerBloodGroup">Blood group: -</strong>
+            <span id="donorPickerRequestMeta">No request selected</span>
+          </div>
+
+          <div id="donorPickerList" class="donor-picker-list"></div>
+
+          <div class="donor-picker-actions">
+            <button type="button" class="btn small user-action-btn" data-close-donor-picker>Close</button>
+          </div>
+        </div>
+      </dialog>
     </section>
   </main>
 
@@ -103,8 +125,14 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
     (function () {
       const API = '../backend/request.php';
       const tbody = document.getElementById('requestTableBody');
+      const donorPickerModal = document.getElementById('donorPickerModal');
+      const donorPickerList = document.getElementById('donorPickerList');
+      const donorPickerBloodGroup = document.getElementById('donorPickerBloodGroup');
+      const donorPickerRequestMeta = document.getElementById('donorPickerRequestMeta');
 
-      if (!tbody) return;
+      let activeDonorRequest = null;
+
+      if (!tbody || !donorPickerModal || !donorPickerList || !donorPickerBloodGroup || !donorPickerRequestMeta) return;
 
       const requestAction = async (action, requestId, extraData = {}) => {
         const formData = new FormData();
@@ -117,8 +145,96 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
           credentials: 'include',
           body: formData
         });
-        return response.json();
+
+        try {
+          const data = await response.json();
+          console.log('requestAction response', action, data);
+          return data;
+        } catch (err) {
+          const text = await response.text();
+          console.error('requestAction non-JSON response', response.status, text);
+          return { success: false, message: text || `HTTP ${response.status}` };
+        }
       };
+
+      const closeDonorPicker = () => {
+        activeDonorRequest = null;
+        if (donorPickerModal.open) {
+          donorPickerModal.close();
+        }
+      };
+
+      const renderDonorPicker = (request, donors) => {
+        donorPickerBloodGroup.textContent = `Blood group: ${request.blood_group || '-'}`;
+        donorPickerRequestMeta.textContent = `Patient: ${request.patient_name || '—'} | Hospital: ${request.hospital || '—'} | Location: ${request.location || '—'}`;
+
+        if (!donors.length) {
+          donorPickerList.innerHTML = '<div class="donor-picker-empty">No matching donors found.</div>';
+          return;
+        }
+
+        donorPickerList.innerHTML = donors.map((donor) => `
+          <div class="donor-picker-item">
+            <div class="donor-picker-donor">
+              <strong>${donor.name || '—'}</strong>
+              <span>Name: ${donor.name || '—'} | ID: ${donor.id} | Phone: ${donor.phone || '—'} | Blood group: ${donor.blood_group || '—'}</span>
+            </div>
+            <button class="btn small user-action-btn donor-select-btn" type="button" data-donor-id="${donor.id}">Select</button>
+          </div>
+        `).join('');
+
+        donorPickerList.querySelectorAll('.donor-select-btn').forEach((button) => {
+          button.addEventListener('click', async () => {
+            if (!activeDonorRequest) return;
+
+            try {
+              const donorId = button.getAttribute('data-donor-id');
+              const data = await requestAction('assign', activeDonorRequest.id, { donor_id: donorId });
+              if (!data.success) {
+                alert(data.message || 'Unable to assign request');
+                return;
+              }
+              closeDonorPicker();
+              await refresh();
+            } catch (error) {
+              alert('Unable to assign request');
+            }
+          });
+        });
+      };
+
+      const openDonorPicker = async (request) => {
+        activeDonorRequest = request;
+        donorPickerBloodGroup.textContent = `Blood group: ${request.blood_group || '-'}`;
+        donorPickerRequestMeta.textContent = `Loading matching donors for ${request.patient_name || 'this request'}...`;
+        donorPickerList.innerHTML = '<div class="donor-picker-empty">Loading matching donors...</div>';
+
+        if (!donorPickerModal.open) {
+          donorPickerModal.showModal();
+        }
+
+        try {
+          const response = await fetch(`${API}?action=matched-donors&request_id=${request.id}`, { credentials: 'include', cache: 'no-store' });
+          const data = await response.json();
+          if (!data.success) {
+            donorPickerList.innerHTML = `<div class="donor-picker-empty">${data.message || 'Unable to load donors'}</div>`;
+            return;
+          }
+          renderDonorPicker(data.request || request, data.donors || []);
+        } catch (error) {
+          donorPickerList.innerHTML = '<div class="donor-picker-empty">Unable to load donors.</div>';
+        }
+      };
+
+      donorPickerModal.querySelectorAll('[data-close-donor-picker]').forEach((element) => {
+        element.addEventListener('click', closeDonorPicker);
+      });
+
+      donorPickerModal.addEventListener('click', (event) => {
+        if (event.target === donorPickerModal) {
+          closeDonorPicker();
+        }
+      });
 
       const render = (requests) => {
         tbody.innerHTML = '';
@@ -131,8 +247,15 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
 
         requests.forEach((request) => {
           const status = request.status || 'Pending';
-          const canComplete = status === 'Donor Assigned';
           const canAssign = !['Completed', 'Failed', 'Donor Assigned'].includes(status);
+          const actionCell = status === 'Completed'
+            ? '<span class="table-badge success">Completed</span>'
+            : status === 'Failed'
+              ? '<span class="table-badge pending">Failed</span>'
+              : `
+                <button class="btn small complete-btn" type="button">Complete</button>
+                <button class="btn small failed-btn" type="button">Failed</button>
+              `;
           const row = document.createElement('tr');
           row.dataset.requestId = request.id;
           row.innerHTML = `
@@ -147,33 +270,11 @@ if (!isLoggedIn() || $_SESSION['role'] !== 'volunteer') {
             <td class="donor-name">${request.donor_name || '—'}</td>
             <td class="donor-phone">${request.donor_phone || '—'}</td>
             <td><button class="btn small assign-btn" type="button" ${canAssign ? '' : 'disabled'}>Assign Donor</button></td>
-            <td class="table-actions">
-              <button class="btn small complete-btn" type="button" ${canComplete ? '' : 'disabled'}>Complete</button>
-              <button class="btn small failed-btn" type="button" ${canComplete ? '' : 'disabled'}>Failed</button>
-            </td>
+            <td class="table-actions">${actionCell}</td>
           `;
 
           row.querySelector('.assign-btn')?.addEventListener('click', async () => {
-            const donorId = window.prompt('Enter donor user id');
-            if (!donorId) return;
-            const donorName = window.prompt('Enter donor name');
-            if (!donorName) return;
-            const donorPhone = window.prompt('Enter donor phone number') || '';
-
-            try {
-              const data = await requestAction('assign', request.id, {
-                donor_id: donorId,
-                donor_name: donorName,
-                donor_phone: donorPhone
-              });
-              if (!data.success) {
-                alert(data.message || 'Unable to assign request');
-                return;
-              }
-              await refresh();
-            } catch (error) {
-              alert('Unable to assign request');
-            }
+            await openDonorPicker(request);
           });
 
           row.querySelector('.complete-btn')?.addEventListener('click', async () => {

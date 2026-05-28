@@ -30,7 +30,6 @@
       about: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       contact: ['public', 'donor', 'patient', 'volunteer', 'admin'],
       team: ['public', 'donor', 'patient', 'volunteer', 'admin'],
-      request: ['public', 'patient', 'volunteer', 'admin'],
       register: ['public'],
       donor: ['donor', 'volunteer'],
       patient: ['patient', 'volunteer'],
@@ -76,7 +75,7 @@
           a.className = 'profile-link';
           // Add data-page so the shell can mark it active
           a.dataset.page = currentRole;
-          a.textContent = 'Profile';
+          a.textContent = 'Dashboard';
           nav.appendChild(a);
         }
 
@@ -104,6 +103,15 @@
     }
 
     const currentPage = document.body.dataset.page;
+    // If a logged-in user lands on the login page, redirect them to their dashboard
+    if (currentPage === 'login' && isLoggedIn) {
+      const profileHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
+                          (currentRole === 'patient') ? 'patient_dashboard.php' :
+                          (currentRole === 'admin') ? 'admin_dashboard.php' :
+                          (currentRole === 'volunteer') ? 'volunteer_dashboard.php' : 'home.html';
+      window.location.href = profileHref;
+      return;
+    }
     document.querySelectorAll('.site-nav a[data-page]').forEach((link) => {
       if (currentPage && link.dataset.page === currentPage) {
         link.classList.add('active');

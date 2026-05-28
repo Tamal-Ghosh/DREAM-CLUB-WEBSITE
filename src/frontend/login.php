@@ -1,3 +1,35 @@
+<?php
+require_once __DIR__ . '/../backend/session.php';
+
+// Prevent caching of the login page so back-navigation re-validates session
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Vary: Cookie');
+
+// If already logged in, redirect to the appropriate dashboard
+if (isLoggedIn()) {
+  $role = $_SESSION['role'] ?? 'public';
+  switch ($role) {
+    case 'donor':
+      $target = 'donor_dashboard.php';
+      break;
+    case 'patient':
+      $target = 'patient_dashboard.php';
+      break;
+    case 'admin':
+      $target = 'admin_dashboard.php';
+      break;
+    case 'volunteer':
+      $target = 'volunteer_dashboard.php';
+      break;
+    default:
+      $target = 'home.html';
+  }
+  header('Location: ' . $target);
+  exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +60,7 @@
         <a href="about.html" data-page="about">About</a>
         <a href="our_team.html" data-page="team">Our Team</a>
         <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.html" data-page="login">Login</a>
+        <a href="login.php" data-page="login">Login</a>
       </nav>
     </div>
   </header>

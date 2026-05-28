@@ -12,7 +12,7 @@ $password = $_POST['password'] ?? '';
 $remember = !empty($_POST['remember']);
 
 if (!$email || !$password) {
-    header('Location: ../frontend/login.html?error=missing');
+    header('Location: ../frontend/login.php?error=missing');
     exit;
 }
 
@@ -22,17 +22,17 @@ $stmt->execute([$email]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: ../frontend/login.html?error=invalid');
+    header('Location: ../frontend/login.php?error=invalid');
     exit;
 }
 
 if ($user['status'] !== 'Active') {
-    header('Location: ../frontend/login.html?error=blocked');
+    header('Location: ../frontend/login.php?error=blocked');
     exit;
 }
 
 if (!password_verify($password, $user['password'])) {
-    header('Location: ../frontend/login.html?error=invalid');
+    header('Location: ../frontend/login.php?error=invalid');
     exit;
 }
 
