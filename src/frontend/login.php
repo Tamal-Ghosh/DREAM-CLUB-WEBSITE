@@ -12,61 +12,34 @@ if (isLoggedIn()) {
   $role = $_SESSION['role'] ?? 'public';
   switch ($role) {
     case 'donor':
-      $target = 'donor_dashboard.php';
+      $target = '/project_club/src/frontend/donor_dashboard.php';
       break;
     case 'patient':
-      $target = 'patient_dashboard.php';
+      $target = '/project_club/src/frontend/patient_dashboard.php';
       break;
     case 'admin':
-      $target = 'admin_dashboard.php';
+      $target = '/project_club/src/frontend/admin_dashboard.php';
       break;
     case 'volunteer':
-      $target = 'volunteer_dashboard.php';
+      $target = '/project_club/src/frontend/volunteer_dashboard.php';
       break;
     default:
-      $target = 'home.html';
+      $target = '/project_club/src/frontend/home.php';
   }
   header('Location: ' . $target);
   exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Dream</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/login.css">
-  <link rel="stylesheet" href="css/site-shell.css">
-</head>
-<body data-page="login">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.php" data-page="login">Login</a>
-      </nav>
-    </div>
-  </header>
-  <main class="login-shell">
+<?php
+$pageTitle = 'Login | Dream';
+$bodyPage = 'login';
+$headLinks = ['css/login.css'];
+
+ob_start();
+?>
+  <section class="login-shell">
     <section class="form-wrap" aria-label="Login form section">
-      <form class="form-inner" action="../backend/login.php" method="post" autocomplete="on">
+      <form class="form-inner" action="/project_club/src/backend/login.php" method="post" autocomplete="on">
         <h2>Sign In</h2>
         <p class="subtitle">Use your member account credentials.</p>
 
@@ -90,21 +63,12 @@ if (isLoggedIn()) {
 
         <button class="btn" type="submit">Log In</button>
 
-        <p class="hint">New here? <a class="link" href="register.html">Create an account</a></p>
+        <p class="hint">New here? <a class="link" href="/project_club/src/frontend/register.php">Create an account</a></p>
         <p class="safe">Secured connection</p>
       </form>
     </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
-</body>
-</html>
+  </section>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/before_login_master.php';
+?>

@@ -23,7 +23,7 @@ function isLoggedIn()
 function requireLogin()
 {
     if (!isLoggedIn()) {
-        header('Location: ../frontend/login.html');
+        header('Location: /project_club/src/frontend/login.php');
         exit;
     }
 }

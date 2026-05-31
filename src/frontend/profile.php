@@ -2,62 +2,35 @@
 require_once __DIR__ . '/../backend/session.php';
 
 if (!isLoggedIn()) {
-  header('Location: ../frontend/home.html');
+  header('Location: /project_club/src/frontend/home.php');
   exit;
 }
 
 $role = $_SESSION['role'] ?? 'public';
-$dashboardHref = 'home.html';
+$dashboardHref = '/project_club/src/frontend/home.php';
 switch ($role) {
   case 'donor':
-    $dashboardHref = 'donor_dashboard.php';
+    $dashboardHref = '/project_club/src/frontend/donor_dashboard.php';
     break;
   case 'patient':
-    $dashboardHref = 'patient_dashboard.php';
+    $dashboardHref = '/project_club/src/frontend/patient_dashboard.php';
     break;
   case 'admin':
-    $dashboardHref = 'admin_dashboard.php';
+    $dashboardHref = '/project_club/src/frontend/admin_dashboard.php';
     break;
   case 'volunteer':
-    $dashboardHref = 'volunteer_dashboard.php';
+    $dashboardHref = '/project_club/src/frontend/volunteer_dashboard.php';
     break;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile | Dream</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/site-shell.css">
-</head>
-<body data-page="profile" class="has-site-shell">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="<?= htmlspecialchars($dashboardHref, ENT_QUOTES) ?>" class="dashboard-link" data-page="<?= htmlspecialchars($role, ENT_QUOTES) ?>">Dashboard</a>
-        <a href="profile.php" class="profile-link" data-page="profile">Profile</a>
-      </nav>
-    </div>
-  </header>
+<?php
+$pageTitle = 'My Profile | Dream';
+$bodyPage = 'profile';
+$headLinks = ['css/dashboard.css'];
+$wrapContentInMain = false;
+
+ob_start();
+?>
 
   <main class="dashboard-shell">
     <section class="dashboard-content" id="overview">
@@ -160,16 +133,8 @@ switch ($role) {
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
   <script src="js/profile-section.js" defer></script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/after_login_master.php';
+?>

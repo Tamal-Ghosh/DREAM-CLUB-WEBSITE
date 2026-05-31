@@ -17,12 +17,12 @@ $confirm = $_POST['confirmPassword'] ?? '';
 $next = $_GET['next'] ?? $_POST['next'] ?? '';
 
 if (!$first || !$last || !$email || !$password) {
-    header('Location: ../frontend/register.html?error=missing');
+    header('Location: /project_club/src/frontend/register.php?error=missing');
     exit;
 }
 
 if ($password !== $confirm) {
-    header('Location: ../frontend/register.html?error=password_mismatch');
+    header('Location: /project_club/src/frontend/register.php?error=password_mismatch');
     exit;
 }
 
@@ -38,7 +38,7 @@ try {
     $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
-        header('Location: ../frontend/register.html?error=exists');
+        header('Location: /project_club/src/frontend/register.php?error=exists');
         exit;
     }
 
@@ -47,14 +47,14 @@ try {
     $insert->execute([$name, $email, $passwordHash, $role, $bloodGroup, $phone]);
 
     if ($next === 'admin') {
-        header('Location: ../frontend/admin_dashboard.php?user_added=1');
+        header('Location: /project_club/src/frontend/admin_dashboard.php?user_added=1');
         exit;
     }
 
-    header('Location: ../frontend/login.html?registered=1');
+    header('Location: /project_club/src/frontend/login.php?registered=1');
     exit;
 } catch (Exception $e) {
     error_log($e->getMessage());
-    header('Location: ../frontend/register.html?error=server');
+    header('Location: /project_club/src/frontend/register.php?error=server');
     exit;
 }

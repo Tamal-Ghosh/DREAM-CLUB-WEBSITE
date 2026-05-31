@@ -1,37 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Team | Dream</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site-shell.css">
-  <link rel="stylesheet" href="css/our-team.css">
-</head>
-<body data-page="team" class="has-site-shell">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.php" data-page="login">Login</a>
-      </nav>
-    </div>
-  </header>
-  <main>
-    <section class="hero">
+<?php
+$pageTitle = 'Our Team | Dream';
+$bodyPage = 'team';
+$headLinks = ['css/our-team.css'];
+
+ob_start();
+?>
+  <section class="hero">
       <article class="hero-card">
         <h1>Our Team</h1>
         <p>Dream is a blood donation club of Khulna University of Engineering and Technology. The committee below is presented as photo cards so every member has a clear profile-style entry.</p>
@@ -138,17 +112,7 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/before_login_master.php';
+?>

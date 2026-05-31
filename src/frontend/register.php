@@ -1,45 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Basic page setup -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register | Dream</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/register.css">
-  <link rel="stylesheet" href="css/site-shell.css">
-</head>
-<body data-page="register">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.php" data-page="login">Login</a>
-      </nav>
-    </div>
-  </header>
-  <main class="register-shell">
+<?php
+$pageTitle = 'Register | Dream';
+$bodyPage = 'register';
+$headLinks = ['css/register.css'];
+
+ob_start();
+?>
+  <section class="register-shell">
     <section class="form-wrap" aria-label="Register form section">
-      <form class="form-inner" action="../backend/register.php" method="post" autocomplete="on">
+      <form class="form-inner" action="/project_club/src/backend/register.php" method="post" autocomplete="on">
         <h2>Create Account</h2>
         <p class="subtitle">Fill in your details to get started.</p>
 
-        <!-- Name fields -->
         <div class="field-grid">
           <div class="field">
             <label for="firstName">First Name</label>
@@ -51,13 +22,11 @@
           </div>
         </div>
 
-        <!-- Email input -->
         <div class="field">
           <label for="email">Email Address</label>
           <input id="email" name="email" type="email" placeholder="you@example.com" required>
         </div>
 
-        <!-- Role selection -->
         <div class="field">
           <label for="role">Register As</label>
           <select id="role" name="role" required>
@@ -67,7 +36,6 @@
           </select>
         </div>
 
-        <!-- Blood group and phone -->
         <div class="field-grid">
           <div class="field">
             <label for="bloodGroup">Blood Group</label>
@@ -89,7 +57,6 @@
           </div>
         </div>
 
-        <!-- Password setup -->
         <div class="field-grid">
           <div class="field">
             <label for="password">Password</label>
@@ -101,30 +68,17 @@
           </div>
         </div>
 
-        <!-- Terms agreement -->
         <label class="check" for="terms">
           <input id="terms" name="terms" type="checkbox" required>
           <span>I agree to the Terms and Privacy Policy</span>
         </label>
 
-        <!-- Submit and sign-in link -->
         <button class="btn" type="submit">Create Account</button>
 
-        <p class="hint">Already have an account? <a class="link" href="login.php">Sign in</a></p>
+        <p class="hint">Already have an account? <a class="link" href="/project_club/src/frontend/login.php">Sign in</a></p>
       </form>
     </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
+  </section>
   <script>
     (function () {
       const params = new URLSearchParams(window.location.search);
@@ -134,9 +88,11 @@
 
       const form = document.querySelector('.form-inner');
       if (form) {
-        form.action = '../backend/register.php?next=admin';
+        form.action = '/project_club/src/backend/register.php?next=admin';
       }
     })();
   </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/before_login_master.php';
+?>

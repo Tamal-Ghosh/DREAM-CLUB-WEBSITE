@@ -1,7 +1,7 @@
 (() => {
   const loadSession = async () => {
     try {
-      const response = await fetch('../backend/session.php', {
+      const response = await fetch('/project_club/src/backend/session.php', {
         credentials: 'include',
         cache: 'no-store'
       });
@@ -65,10 +65,10 @@
       if (isLoggedIn) {
         if (loginLink) loginLink.remove();
 
-        const dashboardHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
-                              (currentRole === 'patient') ? 'patient_dashboard.php' :
-                              (currentRole === 'admin') ? 'admin_dashboard.php' :
-                              (currentRole === 'volunteer') ? 'volunteer_dashboard.php' : 'home.html';
+        const dashboardHref = (currentRole === 'donor') ? '/project_club/src/frontend/donor_dashboard.php' :
+                  (currentRole === 'patient') ? '/project_club/src/frontend/patient_dashboard.php' :
+                  (currentRole === 'admin') ? '/project_club/src/frontend/admin_dashboard.php' :
+                  (currentRole === 'volunteer') ? '/project_club/src/frontend/volunteer_dashboard.php' : '/project_club/src/frontend/home.php';
         let dashboardLink = nav.querySelector('.dashboard-link');
         if (!dashboardLink) {
           dashboardLink = document.createElement('a');
@@ -84,7 +84,7 @@
           profileLink = document.createElement('a');
           nav.appendChild(profileLink);
         }
-        profileLink.href = 'profile.php';
+        profileLink.href = '/project_club/src/frontend/profile.php';
         profileLink.className = 'profile-link';
         profileLink.dataset.page = 'profile';
         profileLink.textContent = 'Profile';
@@ -92,7 +92,7 @@
         // add sign out link if missing
         if (!nav.querySelector('#logoutBtn')) {
           const out = document.createElement('a');
-          out.href = '../backend/logout.php';
+          out.href = '/project_club/src/backend/logout.php';
           out.id = 'logoutBtn';
           out.textContent = 'Sign out';
           nav.appendChild(out);
@@ -101,7 +101,7 @@
         // not logged in: ensure login link is present
         if (!loginLink) {
           const a = document.createElement('a');
-          a.href = 'login.html';
+          a.href = '/project_club/src/frontend/login.php';
           a.dataset.page = 'login';
           a.textContent = 'Login';
           nav.appendChild(a);
@@ -116,10 +116,10 @@
     const currentPage = document.body.dataset.page;
     // If a logged-in user lands on the login page, redirect them to their dashboard
     if (currentPage === 'login' && isLoggedIn) {
-      const profileHref = (currentRole === 'donor') ? 'donor_dashboard.php' :
-                          (currentRole === 'patient') ? 'patient_dashboard.php' :
-                          (currentRole === 'admin') ? 'admin_dashboard.php' :
-                          (currentRole === 'volunteer') ? 'volunteer_dashboard.php' : 'home.html';
+      const profileHref = (currentRole === 'donor') ? '/project_club/src/frontend/donor_dashboard.php' :
+              (currentRole === 'patient') ? '/project_club/src/frontend/patient_dashboard.php' :
+              (currentRole === 'admin') ? '/project_club/src/frontend/admin_dashboard.php' :
+              (currentRole === 'volunteer') ? '/project_club/src/frontend/volunteer_dashboard.php' : '/project_club/src/frontend/home.php';
       window.location.href = profileHref;
       return;
     }
@@ -141,11 +141,11 @@
       logoutBtn.addEventListener('click', async (event) => {
         event.preventDefault();
         try {
-          await fetch('../backend/logout.php', { credentials: 'include' });
+          await fetch('/project_club/src/backend/logout.php', { credentials: 'include' });
         } catch (error) {
           // Ignore logout network failures and force client redirect.
         }
-        window.location.href = 'home.html';
+        window.location.href = '/project_club/src/frontend/login.php';
       });
     }
 

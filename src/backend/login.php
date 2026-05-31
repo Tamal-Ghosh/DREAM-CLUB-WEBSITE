@@ -12,7 +12,7 @@ $password = $_POST['password'] ?? '';
 $remember = !empty($_POST['remember']);
 
 if (!$email || !$password) {
-    header('Location: ../frontend/login.php?error=missing');
+    header('Location: /project_club/src/frontend/login.php?error=missing');
     exit;
 }
 
@@ -22,17 +22,17 @@ $stmt->execute([$email]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: ../frontend/login.php?error=invalid');
+    header('Location: /project_club/src/frontend/login.php?error=invalid');
     exit;
 }
 
 if ($user['status'] !== 'Active') {
-    header('Location: ../frontend/login.php?error=blocked');
+    header('Location: /project_club/src/frontend/login.php?error=blocked');
     exit;
 }
 
 if (!password_verify($password, $user['password'])) {
-    header('Location: ../frontend/login.php?error=invalid');
+    header('Location: /project_club/src/frontend/login.php?error=invalid');
     exit;
 }
 
@@ -65,19 +65,19 @@ if ($remember) {
 // redirect based on role — use PHP-protected dashboard pages
 switch ($user['role']) {
     case 'donor':
-        $loc = '../frontend/donor_dashboard.php';
+        $loc = '/project_club/src/frontend/donor_dashboard.php';
         break;
     case 'patient':
-        $loc = '../frontend/patient_dashboard.php';
+        $loc = '/project_club/src/frontend/patient_dashboard.php';
         break;
     case 'volunteer':
-        $loc = '../frontend/volunteer_dashboard.php';
+        $loc = '/project_club/src/frontend/volunteer_dashboard.php';
         break;
     case 'admin':
-        $loc = '../frontend/admin_dashboard.php';
+        $loc = '/project_club/src/frontend/admin_dashboard.php';
         break;
     default:
-        $loc = '../frontend/home.html';
+        $loc = '/project_club/src/frontend/home.php';
 }
 
 header('Location: ' . $loc);

@@ -1,5 +1,5 @@
 (() => {
-  const API = '../backend/profile.php';
+  const API = '/project_club/src/backend/profile.php';
 
   const initProfileSection = async () => {
     const form = document.getElementById('profileForm');

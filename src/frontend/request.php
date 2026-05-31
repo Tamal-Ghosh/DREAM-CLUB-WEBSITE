@@ -1,37 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Request Blood - Dream</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site-shell.css">
-  <link rel="stylesheet" href="css/request.css">
-</head>
-<body data-page="request" class="has-site-shell">
-  <header class="site-header">
-    <div class="site-shell-inner">
-      <a class="site-brand" href="home.html" aria-label="Dream home">
-        <div class="site-brand-logos" aria-hidden="true">
-          <img class="site-brand-logo" src="../assets/logo.jpg" alt="">
-          <img class="site-brand-logo contain" src="../assets/logoKuet.png" alt="">
-        </div>
-        <div class="site-brand-copy">
-          <strong>Dream</strong>
-          <span>Blood donation support network</span>
-        </div>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="home.html" data-page="home">Home</a>
-        <a href="about.html" data-page="about">About</a>
-        <a href="our_team.html" data-page="team">Our Team</a>
-        <a href="contact.html" data-page="contact">Contact</a>
-        <a href="login.php" data-page="login">Login</a>
-      </nav>
-    </div>
-  </header>
-  <main>
-    <section class="request-hero">
+<?php
+$pageTitle = 'Request Blood - Dream';
+$bodyPage = 'request';
+$headLinks = ['css/request.css'];
+
+ob_start();
+?>
+  <section class="request-hero">
       <h1>Request Blood</h1>
       <p>Share the urgent details below so the Dream team can understand the need quickly and help coordinate support.</p>
     </section>
@@ -39,7 +13,7 @@
     <div class="request-grid">
       <section class="request-card">
         <h2>Request Form</h2>
-        <form class="request-form" action="../backend/request.php" method="post">
+        <form class="request-form" action="/project_club/src/backend/request.php" method="post">
           <div class="request-field">
             <label for="patientName">Patient Name</label>
             <input id="patientName" name="patientName" type="text" placeholder="Enter patient name" required>
@@ -102,17 +76,7 @@
         </div>
       </aside>
     </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="site-shell-inner">
-      <div class="site-brand-copy">
-        <strong>Dream</strong>
-        <span>© 2026 Dream. Stay connected, stay ready.</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/site-shell.js" defer></script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/before_login_master.php';
+?>
