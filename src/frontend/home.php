@@ -14,7 +14,7 @@ ob_start();
       <p>Your small help can save someone's life</p>
       <div class="buttons">
         <a id="becomeDonorBtn" class="btn" href="/project_club/src/frontend/register.php">Become Donor</a>
-        <a id="requestBloodBtn" class="btn outline" href="/project_club/src/frontend/request.php">Request Blood</a>
+        <a id="requestBloodBtn" class="btn outline" href="/project_club/src/frontend/patient_dashboard.php">Request Blood</a>
       </div>
     </section>
 
