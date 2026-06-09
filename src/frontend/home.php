@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/../backend/session.php';
+$isLoggedIn = isLoggedIn() ? 'true' : 'false';
+$userRole = isset($_SESSION['role']) ? $_SESSION['role'] : '';
+
 $pageTitle = 'Dream';
 $bodyPage = 'home';
 $headLinks = ['css/home.css'];
@@ -9,14 +13,15 @@ ob_start();
       <h1>Donate Blood, Save Lives</h1>
       <p>Your small help can save someone's life</p>
       <div class="buttons">
-        <a class="btn" href="/project_club/src/frontend/register.php">Become Donor</a>
-        <a class="btn outline" href="/project_club/src/frontend/request.php">Request Blood</a>
+        <a id="becomeDonorBtn" class="btn" href="/project_club/src/frontend/register.php">Become Donor</a>
+        <a id="requestBloodBtn" class="btn outline" href="/project_club/src/frontend/request.php">Request Blood</a>
       </div>
     </section>
 
     <section class="gallery" aria-label="Club photo gallery">
       <div class="gallery-header">
         <h2>Club Photo Gallery</h2>
+        <p>Add your best club photos here.</p>
       </div>
 
       <div class="gallery-grid">
@@ -28,6 +33,30 @@ ob_start();
         <div class="gallery-item"><img src="../assets/img6.jpg" alt="Photo 6"></div>
       </div>
     </section>
+
+    <script>
+      (function () {
+        const loggedIn = <?= $isLoggedIn ?>;
+        const userRole = '<?= htmlspecialchars($userRole, ENT_QUOTES) ?>';
+
+        // Become Donor button logic
+        document.getElementById('becomeDonorBtn')?.addEventListener('click', function (e) {
+          if (loggedIn) {
+            e.preventDefault();
+            alert('You are already signed in.');
+          }
+        });
+
+        // Request Blood button logic: Go to request page only if logged in as patient
+        document.getElementById('requestBloodBtn')?.addEventListener('click', function (e) {
+          const isAllowed = loggedIn && userRole === 'patient';
+          if (!isAllowed) {
+            e.preventDefault();
+            window.location.href = '/project_club/src/frontend/login.php';
+          }
+        });
+      })();
+    </script>
 <?php
 $content = ob_get_clean();
 require __DIR__ . '/before_login_master.php';
