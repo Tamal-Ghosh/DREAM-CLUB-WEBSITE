@@ -86,10 +86,6 @@ ob_start();
   </main>
 
   <script>
-    <?php
-    $content = ob_get_clean();
-    require __DIR__ . '/after_login_master.php';
-    ?>
     (function () {
       const API = '/project_club/src/backend/request.php';
       const tbody = document.getElementById('requestTableBody');
@@ -289,5 +285,7 @@ ob_start();
       setInterval(refresh, 4000);
     })();
   </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/after_login_master.php';
+?>

@@ -341,6 +341,15 @@ body[data-page="donor"] .hero-grid.donor-hero-grid {
   border-color: rgba(204, 74, 36, 0.2);
 }
 
+.btn.danger {
+  background: linear-gradient(135deg, #b30000, #e63946);
+  color: #fff;
+}
+
+.btn.danger:hover {
+  background: linear-gradient(135deg, #990000, #d62828);
+}
+
 .side-card {
   padding: 24px;
   display: grid;

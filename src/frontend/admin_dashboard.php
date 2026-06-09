@@ -85,7 +85,7 @@ ob_start();
                   <th>Role</th>
                   <th>Status</th>
                   <th>Change Status</th>
-                  <th>Edit</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="userTableBody"></tbody>
@@ -178,10 +178,6 @@ ob_start();
   </main>
 
   <script>
-    <?php
-    $content = ob_get_clean();
-    require __DIR__ . '/after_login_master.php';
-    ?>
     (function () {
       const API = '/project_club/src/backend/request.php';
       const tbody = document.getElementById('requestTableBody');
@@ -442,7 +438,12 @@ ob_start();
             <td>${user.role || '—'}</td>
             <td><span class="table-badge ${statusLabel === 'Active' ? 'success' : 'pending'}">${statusLabel}</span></td>
             <td><button class="btn small status-toggle-btn user-status-btn" type="button">${nextStatus}</button></td>
-            <td><button class="btn small edit-user-btn user-action-btn" type="button">Edit</button></td>
+            <td>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn small edit-user-btn" type="button" style="padding: 6px 12px; font-weight: 700;">Edit</button>
+                <button class="btn small danger delete-user-btn" type="button" style="padding: 6px 12px; font-weight: 700;">Delete</button>
+              </div>
+            </td>
           `;
 
           row.querySelector('.status-toggle-btn')?.addEventListener('click', async () => {
@@ -472,6 +473,23 @@ ob_start();
             editUserStatus.value = user.status || 'Active';
             if (!editUserModal.open) {
               editUserModal.showModal();
+            }
+          });
+
+          row.querySelector('.delete-user-btn')?.addEventListener('click', async () => {
+            if (confirm(`Are you sure you want to delete user "${user.name}"?`)) {
+              try {
+                const data = await requestAction('delete-user', {
+                  user_id: user.id
+                });
+                if (!data.success) {
+                  alert(data.message || 'Unable to delete user');
+                  return;
+                }
+                await refreshUsers();
+              } catch (error) {
+                alert('Unable to delete user');
+              }
             }
           });
 
@@ -545,5 +563,7 @@ ob_start();
       setInterval(refreshUsers, 4000);
     })();
   </script>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/after_login_master.php';
+?>

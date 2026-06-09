@@ -202,4 +202,21 @@ if ($method === 'POST' && $action === 'toggle-status') {
     json_response(['success' => true, 'message' => 'Status updated']);
 }
 
+if ($method === 'POST' && $action === 'delete-user') {
+    $userId = (int)($_POST['user_id'] ?? 0);
+
+    if ($userId <= 0) {
+        json_response(['success' => false, 'message' => 'Invalid user ID'], 422);
+    }
+
+    if ($userId === (int)($_SESSION['user_id'] ?? 0)) {
+        json_response(['success' => false, 'message' => 'You cannot delete yourself'], 422);
+    }
+
+    $stmt = $pdo->prepare('DELETE FROM users WHERE id = ?');
+    $stmt->execute([$userId]);
+
+    json_response(['success' => true, 'message' => 'User deleted successfully']);
+}
+
 json_response(['success' => false, 'message' => 'Unknown action'], 400);
