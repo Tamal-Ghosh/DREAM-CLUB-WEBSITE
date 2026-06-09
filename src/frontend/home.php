@@ -17,16 +17,15 @@ ob_start();
     <section class="gallery" aria-label="Club photo gallery">
       <div class="gallery-header">
         <h2>Club Photo Gallery</h2>
-        <p>Add your best club photos here.</p>
       </div>
 
       <div class="gallery-grid">
-        <div class="gallery-item">Photo 1</div>
-        <div class="gallery-item">Photo 2</div>
-        <div class="gallery-item">Photo 3</div>
-        <div class="gallery-item">Photo 4</div>
-        <div class="gallery-item">Photo 5</div>
-        <div class="gallery-item">Photo 6</div>
+        <div class="gallery-item"><img src="../assets/img1.jpg" alt="Photo 1"></div>
+        <div class="gallery-item"><img src="../assets/img2.jpg" alt="Photo 2"></div>
+        <div class="gallery-item"><img src="../assets/img3.jpg" alt="Photo 3"></div>
+        <div class="gallery-item"><img src="../assets/img4.jpg" alt="Photo 4"></div>
+        <div class="gallery-item"><img src="../assets/img5.jpg" alt="Photo 5"></div>
+        <div class="gallery-item"><img src="../assets/img6.jpg" alt="Photo 6"></div>
       </div>
     </section>
 <?php
