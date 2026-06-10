@@ -35,6 +35,7 @@ switch ($role) {
 </head>
 <body<?php if ($bodyPage) echo ' data-page="'.htmlspecialchars($bodyPage, ENT_QUOTES).'"'; ?> class="has-site-shell">
   <header class="site-header">
+    <div class="site-nav-overlay" id="siteNavOverlay"></div>
     <div class="site-shell-inner">
       <a class="site-brand" href="/project_club/src/frontend/home.php" aria-label="Dream home">
         <div class="site-brand-logos" aria-hidden="true">
@@ -46,7 +47,11 @@ switch ($role) {
           <span>Blood donation support network</span>
         </div>
       </a>
+      <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle navigation" aria-expanded="false">
+        &#8942;
+      </button>
       <nav class="site-nav" aria-label="Primary navigation">
+        <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">&times;</button>
         <a href="/project_club/src/frontend/home.php" data-page="home">Home</a>
         <a href="/project_club/src/frontend/about.php" data-page="about">About</a>
         <a href="/project_club/src/frontend/our_team.php" data-page="team">Our Team</a>

@@ -177,6 +177,41 @@
     }
   };
 
+  const initMobileMenu = () => {
+    const toggleBtn = document.getElementById('menuToggleBtn');
+    const closeBtn = document.getElementById('menuCloseBtn');
+    const overlay = document.getElementById('siteNavOverlay');
+    const nav = document.querySelector('.site-nav');
+
+    if (!toggleBtn || !overlay || !nav) return;
+
+    const openMenu = () => {
+      nav.classList.add('open');
+      overlay.classList.add('open');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+    };
+
+    const closeMenu = () => {
+      nav.classList.remove('open');
+      overlay.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    };
+
+    toggleBtn.addEventListener('click', openMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+
   window.DreamShell = window.DreamShell || {};
   window.DreamShell.refresh = refreshShell;
 
