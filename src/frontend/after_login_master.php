@@ -48,7 +48,9 @@ switch ($role) {
         </div>
       </a>
       <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle navigation" aria-expanded="false">
-        &#8942;
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
       <nav class="site-nav" aria-label="Primary navigation">
         <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">&times;</button>

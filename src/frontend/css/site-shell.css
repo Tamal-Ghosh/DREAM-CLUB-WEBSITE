@@ -285,17 +285,26 @@ main {
   display: none;
   background: transparent;
   border: none;
-  color: #fff8f6;
-  font-size: 28px;
   cursor: pointer;
-  padding: 4px 10px;
+  padding: 8px 10px;
   border-radius: 8px;
   transition: background 0.2s;
+  flex-direction: column;
+  gap: 4px;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1010;
   pointer-events: auto;
+}
+
+.menu-toggle-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #fff8f6;
+  border-radius: 1px;
+  transition: background-color 0.2s;
 }
 
 .menu-toggle-btn:hover {
