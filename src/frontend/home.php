@@ -21,7 +21,6 @@ ob_start();
     <section class="gallery" aria-label="Club photo gallery">
       <div class="gallery-header">
         <h2>Club Photo Gallery</h2>
-        <p>Add your best club photos here.</p>
       </div>
 
       <div class="gallery-grid">

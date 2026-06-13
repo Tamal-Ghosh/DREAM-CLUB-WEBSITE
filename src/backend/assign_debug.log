@@ -1,2 +1,2 @@
-[2026-06-09T17:24:34+02:00] assign attempt: request_id=5 donor_id=3 user_id=5
-assigned ok: donor=3 to request=5
+[2026-06-12T19:13:05+02:00] assign attempt: request_id=14 donor_id=27 user_id=32
+assigned ok: donor=27 to request=14
